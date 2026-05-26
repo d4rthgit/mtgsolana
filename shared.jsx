@@ -93,6 +93,7 @@ const DROP_001 = [
     rules: "Red creatures get +1/+1. Whenever a Mountain is tapped for mana, its controller adds {R} to their mana pool (in addition to any other mana that land produces).",
     flavor: "\"Some relics outlive the world that forged them.\"",
     valueLabel: "Vintage · 1993 · CE",
+    valueSol: 2,
     ultra: true,
   },
 ];

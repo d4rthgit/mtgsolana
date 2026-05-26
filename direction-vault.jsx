@@ -523,7 +523,7 @@ function VaultTicker() {
     ["MINDSLAVER · CGC 10 · SEALED", vault.spellGlow],
     ["ELVISH PIPER · PSA 7 FOIL", vault.arcaneGlow],
     ["SHELTERED VALLEY · CGC 8.5", vault.spark],
-    ["◆◆ ULTRA-RAFFLE · GAUNTLET OF MIGHT · CE 1993 ◆◆", vault.spell],
+    ["◆◆ ULTRA-RAFFLE · GAUNTLET OF MIGHT · ≈ 2 SOL ◆◆", vault.spell],
     ["DROP 001 · IV CARDS LIVE", vault.spellGlow],
     ["NO TAX · NO TEAM · NO MERCY", vault.ember],
   ];
@@ -1447,8 +1447,51 @@ function UltraRaffleSpotlight({ card }) {
           }}>
             <strong style={{ color: vault.spellGlow }}>{card.year} {card.name}</strong> — {card.set},
             graded <strong style={{ color: vault.spellGlow }}>{card.grade}</strong>. Held by Collector Crypt.
-            Bound to the <em style={{ color: vault.spell }}>fourth cycle</em> of $MTG — the rarest draw on the wheel.
+            Worth <strong style={{ color: vault.spellGlow }}>≈ {card.valueSol} SOL</strong> and bound to the{" "}
+            <em style={{ color: vault.spell }}>fourth cycle</em> of $MTG — the rarest draw on the wheel.
           </p>
+
+          {/* VALUE band — the headline number */}
+          <div style={{
+            position: "relative",
+            marginBottom: isMobile ? 14 : 18, maxWidth: 520,
+            padding: isMobile ? "14px 16px" : "18px 22px",
+            background: `linear-gradient(135deg, ${vault.spell}22, ${vault.arcaneDeep}33, ${vault.bgDeep})`,
+            border: `1px solid ${vault.spellGlow}`,
+            borderRadius: 4,
+            boxShadow: `inset 0 0 30px rgba(251,191,36,.15), 0 0 30px rgba(251,191,36,.25)`,
+            display: "flex", alignItems: "center", justifyContent: "space-between",
+            gap: 16,
+          }}>
+            <div style={{ minWidth: 0 }}>
+              <div style={{
+                fontFamily: vault.fontMono, fontSize: isMobile ? 9 : 10, letterSpacing: "0.34em",
+                color: vault.spellGlow, textTransform: "uppercase",
+              }}>
+                Prize Value · Ultra-Raffle
+              </div>
+              <div style={{
+                fontFamily: vault.fontDisplay, fontWeight: 700,
+                fontSize: isMobile ? 32 : 44, lineHeight: 1,
+                marginTop: 6,
+                background: `linear-gradient(135deg, ${vault.spellGlow}, ${vault.spell})`,
+                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                textShadow: `0 0 24px ${vault.spell}66`,
+                letterSpacing: "0.02em",
+              }}>
+                ≈ {card.valueSol} SOL
+              </div>
+            </div>
+            <div style={{
+              flex: "0 0 auto", textAlign: "right",
+              fontFamily: vault.fontBody, fontStyle: "italic",
+              fontSize: isMobile ? 12 : 14, color: vault.inkSoft,
+              lineHeight: 1.4, maxWidth: 160,
+            }}>
+              vintage,<br/>encapsulated,<br/>irreplaceable
+            </div>
+          </div>
 
           <div style={{
             display: "grid", gridTemplateColumns: "1fr 1fr", gap: isMobile ? 8 : 12,
@@ -1501,6 +1544,28 @@ function UltraRaffleSpotlight({ card }) {
              style={{ textDecoration: "none", display: "block" }}>
             <RealCard card={card} size="lg" rotate={-3} glow />
           </a>
+          {/* Floating value chip */}
+          <div style={{
+            position: "absolute",
+            top: isMobile ? -14 : -22,
+            right: isMobile ? -6 : -14,
+            zIndex: 2,
+            background: `linear-gradient(135deg, ${vault.spellGlow}, ${vault.spell})`,
+            color: vault.bgDeep,
+            fontFamily: vault.fontDisplay, fontWeight: 700,
+            fontSize: isMobile ? 14 : 18,
+            letterSpacing: "0.06em",
+            padding: isMobile ? "8px 14px" : "10px 18px",
+            borderRadius: 999,
+            border: `1px solid ${vault.spellGlow}`,
+            boxShadow: `0 0 30px ${vault.spell}aa, inset 0 1px 0 rgba(255,255,255,.5)`,
+            transform: "rotate(6deg)",
+            whiteSpace: "nowrap",
+            display: "inline-flex", alignItems: "center", gap: 6,
+          }}>
+            <span style={{ fontFamily: vault.fontMono, fontSize: isMobile ? 9 : 10, letterSpacing: "0.28em" }}>WORTH</span>
+            ≈ {card.valueSol} SOL
+          </div>
         </div>
       </div>
     </div>
