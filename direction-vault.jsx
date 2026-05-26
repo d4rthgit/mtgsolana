@@ -868,17 +868,101 @@ function VaultWinners() {
             {WINNERS.map((w, i) => {
               const isPending = !w.card || w.card === "—";
               const rs = rarityStyle(w.rarity);
+              const isFeatured = i === 0 && !isPending;
+              const walletShort = truncCA(w.wallet, isMobile ? 4 : 6, isMobile ? 4 : 6);
+              const proofEl = isPending ? (
+                <span style={{
+                  fontFamily: vault.fontMono, fontSize: 10, letterSpacing: "0.28em",
+                  color: vault.inkMuted,
+                }}>—</span>
+              ) : w.txUrl ? (
+                <a href={w.txUrl} target="_blank" rel="noopener noreferrer" style={{
+                  fontFamily: vault.fontMono, fontSize: 10, letterSpacing: "0.28em",
+                  color: rs.color, border: `1px solid ${rs.color}66`, borderRadius: 3,
+                  padding: "4px 8px", textDecoration: "none",
+                  boxShadow: `0 0 12px ${rs.glow}33`,
+                  whiteSpace: "nowrap",
+                }}>TX ↗</a>
+              ) : (
+                <span style={{
+                  fontFamily: vault.fontMono, fontSize: 10, letterSpacing: "0.28em",
+                  color: rs.color, border: `1px solid ${rs.color}66`, borderRadius: 3,
+                  padding: "4px 8px", cursor: "default",
+                }}>TX ↗</span>
+              );
+
+              if (isMobile) {
+                return (
+                  <div key={i} style={{
+                    display: "grid",
+                    gridTemplateColumns: "40px 1fr auto",
+                    columnGap: 12, rowGap: 6,
+                    padding: "16px 14px",
+                    borderBottom: i < WINNERS.length - 1 ? `1px solid ${vault.panelEdge}` : "none",
+                    background: isFeatured
+                      ? `linear-gradient(90deg, ${vault.spell}11 0%, transparent 60%)`
+                      : "transparent",
+                    alignItems: "center",
+                  }}>
+                    <div style={{
+                      fontFamily: vault.fontDisplay, fontSize: 20, fontWeight: 700,
+                      color: isFeatured ? vault.spellGlow : vault.inkSoft,
+                      textShadow: isFeatured ? `0 0 12px ${vault.spell}66` : "none",
+                      letterSpacing: "0.02em",
+                    }}>
+                      {String(WINNERS.length - i).padStart(2, "0")}
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+                      <div style={{
+                        width: 22, height: 22, borderRadius: "50%", flex: "0 0 auto",
+                        background: `linear-gradient(135deg, ${rs.color}, ${vault.arcaneDeep})`,
+                        border: `1px solid ${rs.color}88`,
+                        boxShadow: `0 0 10px ${rs.glow}66`,
+                      }} />
+                      <span style={{
+                        fontFamily: vault.fontMono, fontSize: 12, color: vault.ink,
+                        letterSpacing: "0.04em", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                      }}>{walletShort}</span>
+                    </div>
+                    <div>{proofEl}</div>
+
+                    <div />
+                    <div style={{ gridColumn: "2 / 4" }}>
+                      <div style={{
+                        fontFamily: vault.fontDisplay, fontSize: 16, fontWeight: 600,
+                        color: isPending ? vault.inkMuted : vault.ink, letterSpacing: "0.01em",
+                      }}>
+                        {isPending ? "Awaiting draw" : w.card}
+                      </div>
+                      {!isPending && (
+                        <div style={{
+                          fontFamily: vault.fontBody, fontStyle: "italic", fontSize: 12,
+                          color: rs.color, marginTop: 2,
+                        }}>{w.rarity}</div>
+                      )}
+                      <div style={{
+                        marginTop: 6, display: "flex", gap: 12, flexWrap: "wrap",
+                        fontFamily: vault.fontMono, fontSize: 10, letterSpacing: "0.18em",
+                        color: vault.inkSoft,
+                      }}>
+                        <span style={{ color: isPending ? vault.inkMuted : vault.spellGlow }}>{w.grade}</span>
+                        <span style={{
+                          fontFamily: vault.fontBody, fontStyle: "italic", fontSize: 12,
+                          letterSpacing: 0, color: isPending ? vault.inkMuted : vault.inkSoft,
+                        }}>{w.when}</span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+
               return (
                 <div key={i} style={{
                   display: "grid",
-                  gridTemplateColumns: isMobile
-                    ? "44px 1fr auto"
-                    : "80px 1.2fr 1.6fr 1fr 1fr 90px",
-                  gridAutoRows: isMobile ? "auto" : undefined,
-                  rowGap: isMobile ? 6 : 0,
-                  padding: isMobile ? "14px 16px" : "18px 24px",
+                  gridTemplateColumns: "80px 1.2fr 1.6fr 1fr 1fr 90px",
+                  padding: "18px 24px",
                   borderBottom: i < WINNERS.length - 1 ? `1px solid ${vault.panelEdge}` : "none",
-                  background: i === 0 && !isPending
+                  background: isFeatured
                     ? `linear-gradient(90deg, ${vault.spell}11 0%, transparent 60%)`
                     : "transparent",
                   fontFamily: vault.fontDisplay,
@@ -887,23 +971,24 @@ function VaultWinners() {
                 }}>
                   <div style={{
                     fontFamily: vault.fontDisplay, fontSize: 22, fontWeight: 700,
-                    color: i === 0 && !isPending ? vault.spellGlow : vault.inkSoft,
-                    textShadow: i === 0 && !isPending ? `0 0 12px ${vault.spell}66` : "none",
+                    color: isFeatured ? vault.spellGlow : vault.inkSoft,
+                    textShadow: isFeatured ? `0 0 12px ${vault.spell}66` : "none",
                     letterSpacing: "0.02em",
                   }}>
                     {String(WINNERS.length - i).padStart(2, "0")}
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
                     <div style={{
                       width: 28, height: 28, borderRadius: "50%", flex: "0 0 auto",
                       background: `linear-gradient(135deg, ${rs.color}, ${vault.arcaneDeep})`,
                       border: `1px solid ${rs.color}88`,
                       boxShadow: `0 0 12px ${rs.glow}66`,
                     }} />
-                    <span style={{
+                    <span title={w.wallet} style={{
                       fontFamily: vault.fontMono, fontSize: 14, color: vault.ink,
                       letterSpacing: "0.06em",
-                    }}>{w.wallet}</span>
+                      overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                    }}>{walletShort}</span>
                   </div>
                   <div>
                     <div style={{
@@ -916,7 +1001,7 @@ function VaultWinners() {
                       <div style={{
                         fontFamily: vault.fontBody, fontStyle: "italic", fontSize: 13,
                         color: rs.color, marginTop: 2,
-                      }}>{w.rarity}</div>
+                      }}>{w.rarity}{w.set ? ` · ${w.set}` : ""}</div>
                     )}
                   </div>
                   <div style={{
@@ -932,20 +1017,7 @@ function VaultWinners() {
                     {w.when}
                   </div>
                   <div style={{ textAlign: "right" }}>
-                    {isPending ? (
-                      <span style={{
-                        fontFamily: vault.fontMono, fontSize: 10, letterSpacing: "0.28em",
-                        color: vault.inkMuted,
-                      }}>—</span>
-                    ) : (
-                      <span style={{
-                        fontFamily: vault.fontMono, fontSize: 10, letterSpacing: "0.28em",
-                        color: rs.color, border: `1px solid ${rs.color}66`, borderRadius: 3,
-                        padding: "4px 8px", cursor: "default",
-                      }}>
-                        TX ↗
-                      </span>
-                    )}
+                    {proofEl}
                   </div>
                 </div>
               );

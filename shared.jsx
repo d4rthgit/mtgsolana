@@ -330,7 +330,18 @@ function useDexScreener(tokenAddress) {
 
 // Winners leaderboard — most recent first. Add entries here as draws roll.
 // Leave the array empty to display the "awaiting first draw" empty state.
-const WINNERS = [];
+const WINNERS = [
+  {
+    wallet: "qKpZbAeu97Ba4sgpRqEehXD7dSwxWW59pNQkWSxsySJ",
+    card: "Sheltered Valley",
+    rarity: "Rare",
+    grade: "CGC 8.5",
+    set: "Alliances",
+    year: 1996,
+    when: "2026-05-26",
+    txUrl: "https://solscan.io/tx/5ta64TTHufEHDZpbvQ26DSZhs9Hk8LStMxpUPbank6BniShjushQJKokpfKnhPDxRHfH1g4m8uozx2wVXMKaeaw9?cluster=mainnet-beta",
+  },
+];
 
 Object.assign(window, {
   MTG_CA,
