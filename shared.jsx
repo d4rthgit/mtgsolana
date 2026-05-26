@@ -354,6 +354,15 @@ function useDexScreener(tokenAddress) {
 // Leave the array empty to display the "awaiting first draw" empty state.
 const WINNERS = [
   {
+    wallet: "9XMM8mQtSP1PVkyVY7naJiJxNUcXhT96isQqnTobkR1r",
+    card: "Elvish Piper",
+    rarity: "Rare",
+    grade: "PSA 7",
+    set: "Urza's Destiny",
+    year: 1999,
+    when: "2026-05-26",
+  },
+  {
     wallet: "qKpZbAeu97Ba4sgpRqEehXD7dSwxWW59pNQkWSxsySJ",
     card: "Sheltered Valley",
     rarity: "Rare",
