@@ -355,6 +355,16 @@ function useDexScreener(tokenAddress) {
 // Leave the array empty to display the "awaiting first draw" empty state.
 const WINNERS = [
   {
+    wallet: "3w8N7ay9pvNaXxYUu7gFeZQ2zHg6FECSgwGWxcWwb8C8",
+    card: "Mindslaver",
+    rarity: "Mythic",
+    grade: "CGC 10",
+    set: "Breaking News",
+    year: 2024,
+    when: "2026-05-27",
+    txUrl: "https://solscan.io/tx/3hjo8hCzgsEdZT7acfboBgAa89oK6necLNWeDxfSbyTCMGnDa86mv3MxP2ZLe6FJb84XUvDQN3ZJbLNh63oa8h7h",
+  },
+  {
     wallet: "5QQ5Xi9iyY29th4bt5q9GEA1QFSVprMDk6FRadupE7Aj",
     card: "Elvish Piper",
     rarity: "Rare",
