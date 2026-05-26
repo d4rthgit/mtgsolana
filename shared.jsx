@@ -176,6 +176,32 @@ const CANDLES = [
   { o: 73, c: 78, l: 72, h: 80 },
 ];
 
+// Hook: viewport breakpoint. Returns {isMobile, isTablet} that update on resize.
+// Mobile <= 640px, tablet 641–960px.
+function useViewport() {
+  const get = () => {
+    if (typeof window === "undefined") return { isMobile: false, isTablet: false, w: 1200 };
+    const w = window.innerWidth;
+    return { isMobile: w <= 640, isTablet: w > 640 && w <= 960, w };
+  };
+  const [vp, setVp] = React.useState(get);
+  React.useEffect(() => {
+    let raf = 0;
+    const onResize = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => setVp(get()));
+    };
+    window.addEventListener("resize", onResize);
+    window.addEventListener("orientationchange", onResize);
+    return () => {
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("orientationchange", onResize);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+  return vp;
+}
+
 // Hook: countdown to next raffle. Returns {d,h,m,s} string parts.
 // targetTs may be a number or a function that returns a number (for self-rolling timers).
 function useCountdown(targetTs) {
@@ -324,5 +350,6 @@ Object.assign(window, {
   useCountdown,
   useCopy,
   useDexScreener,
+  useViewport,
   truncCA,
 });

@@ -17,15 +17,21 @@
       font-family: "Cormorant Garamond", Georgia, serif;
       color: #e8dcff;
       min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-text-size-adjust: 100%;
     }
-    #root { width: 100%; min-height: 100vh; }
+    #root { width: 100%; min-height: 100vh; overflow-x: hidden; }
     * { box-sizing: border-box; }
+    img, svg, iframe { max-width: 100%; }
     ::selection { background: rgba(183, 148, 244, .35); color: #fff; }
     /* Custom scrollbar */
     ::-webkit-scrollbar { width: 12px; height: 12px; }
     ::-webkit-scrollbar-track { background: #04020a; }
     ::-webkit-scrollbar-thumb { background: #231640; border-radius: 6px; }
     ::-webkit-scrollbar-thumb:hover { background: #6d28d9; }
+    @media (max-width: 640px) {
+      ::-webkit-scrollbar { width: 6px; height: 6px; }
+    }
   </style>
 
   <script

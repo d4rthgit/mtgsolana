@@ -90,8 +90,9 @@ function HexBg({ color = vault.arcane, opacity = 0.05 }) {
 
 // ── Glow button ──────────────────────────────────────────────────
 function GlowButton({ children, onClick, href, size = "lg", style = {}, variant = "primary" }) {
-  const pad = size === "lg" ? "18px 36px" : "11px 22px";
-  const fs = size === "lg" ? 16 : 13;
+  const { isMobile } = useViewport();
+  const pad = size === "lg" ? (isMobile ? "13px 22px" : "18px 36px") : (isMobile ? "9px 16px" : "11px 22px");
+  const fs = size === "lg" ? (isMobile ? 13 : 16) : (isMobile ? 11 : 13);
   const Tag = href ? "a" : "button";
   const primary = variant === "primary";
   return (
@@ -121,9 +122,11 @@ function GlowButton({ children, onClick, href, size = "lg", style = {}, variant 
 
 // ── Panel with corner ticks ──────────────────────────────────────
 function VaultPanel({ children, style = {}, glow = false, padding = 28 }) {
+  const { isMobile } = useViewport();
+  const pad = isMobile ? Math.min(padding, 18) : padding;
   return (
     <div style={{
-      position: "relative", padding,
+      position: "relative", padding: pad,
       background: `linear-gradient(180deg, ${vault.panel}, ${vault.bgDeep})`,
       border: `1px solid ${vault.panelEdge}`,
       borderRadius: 6,
@@ -309,10 +312,11 @@ function VaultHero() {
   const [copied, copy] = useCopy();
   const { mtg, loading, error } = useDexScreener(MTG_CA);
   const t = useCountdown(nextRaffleTs);
+  const { isMobile, isTablet } = useViewport();
   return (
     <section style={{
       position: "relative",
-      padding: "44px 80px 110px",
+      padding: isMobile ? "20px 16px 60px" : isTablet ? "32px 40px 80px" : "44px 80px 110px",
       overflow: "hidden",
       borderBottom: `1px solid ${vault.panelEdge}`,
     }}>
@@ -324,43 +328,60 @@ function VaultHero() {
       <HexBg color={vault.arcane} opacity={0.04} />
 
       {/* Top bar */}
-      <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 80 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+      <div style={{
+        position: "relative", zIndex: 1, display: "flex",
+        alignItems: "center", justifyContent: "space-between",
+        marginBottom: isMobile ? 40 : 80, gap: 12, flexWrap: "wrap",
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 10 : 14 }}>
           <div style={{
-            position: "relative", width: 46, height: 46,
+            position: "relative", width: isMobile ? 36 : 46, height: isMobile ? 36 : 46,
             display: "flex", alignItems: "center", justifyContent: "center",
           }}>
-            <Sigil size={46} color={vault.arcane} opacity={0.85} spin style={{ position: "absolute", inset: 0 }} />
+            <Sigil size={isMobile ? 36 : 46} color={vault.arcane} opacity={0.85} spin style={{ position: "absolute", inset: 0 }} />
             <span style={{
               position: "relative", color: vault.spellGlow,
-              fontFamily: vault.fontDisplay, fontWeight: 700, fontSize: 18,
+              fontFamily: vault.fontDisplay, fontWeight: 700, fontSize: isMobile ? 14 : 18,
               textShadow: `0 0 8px ${vault.spell}`,
             }}>𝕄</span>
           </div>
           <div>
-            <div style={{ fontFamily: vault.fontDisplay, fontWeight: 700, fontSize: 17, letterSpacing: "0.28em", color: vault.ink }}>
+            <div style={{ fontFamily: vault.fontDisplay, fontWeight: 700, fontSize: isMobile ? 13 : 17, letterSpacing: "0.28em", color: vault.ink }}>
               MTG DISTRI
             </div>
-            <div style={{ fontFamily: vault.fontMono, fontSize: 10, letterSpacing: "0.32em", color: vault.inkMuted }}>
+            <div style={{ fontFamily: vault.fontMono, fontSize: isMobile ? 8 : 10, letterSpacing: "0.32em", color: vault.inkMuted }}>
               VAULT.RITE / v0.2.6
             </div>
           </div>
         </div>
-        <nav style={{ display: "flex", gap: 36, fontFamily: vault.fontMono, fontSize: 12, letterSpacing: "0.3em", textTransform: "uppercase", color: vault.inkSoft }}>
-          <a href="#how"     style={{ color: "inherit", textDecoration: "none" }}>The Rite</a>
-          <a href="#token"   style={{ color: "inherit", textDecoration: "none" }}>$MTG</a>
-          <a href="#winners" style={{ color: "inherit", textDecoration: "none" }}>Winners</a>
-          <a href="#vault"   style={{ color: "inherit", textDecoration: "none" }}>Vault</a>
-          <a href="#faq"     style={{ color: "inherit", textDecoration: "none" }}>Codex</a>
-        </nav>
+        {!isMobile && (
+          <nav style={{
+            display: "flex", gap: isTablet ? 20 : 36,
+            fontFamily: vault.fontMono, fontSize: isTablet ? 11 : 12,
+            letterSpacing: "0.3em", textTransform: "uppercase", color: vault.inkSoft,
+            flexWrap: "wrap", justifyContent: "center",
+          }}>
+            <a href="#how"     style={{ color: "inherit", textDecoration: "none" }}>The Rite</a>
+            <a href="#token"   style={{ color: "inherit", textDecoration: "none" }}>$MTG</a>
+            <a href="#winners" style={{ color: "inherit", textDecoration: "none" }}>Winners</a>
+            <a href="#vault"   style={{ color: "inherit", textDecoration: "none" }}>Vault</a>
+            <a href="#faq"     style={{ color: "inherit", textDecoration: "none" }}>Codex</a>
+          </nav>
+        )}
         <GlowButton href={PUMPFUN_URL} size="sm">Buy $MTG ↗</GlowButton>
       </div>
 
-      <div style={{ position: "relative", zIndex: 1, display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 80, alignItems: "center" }}>
+      <div style={{
+        position: "relative", zIndex: 1, display: "grid",
+        gridTemplateColumns: isMobile ? "1fr" : "1.2fr 1fr",
+        gap: isMobile ? 40 : isTablet ? 40 : 80,
+        alignItems: "center",
+      }}>
         <div>
           <VaultEyebrow>Pump.Fun · Solana · Custody by Collector Crypt</VaultEyebrow>
           <h1 style={{
-            fontFamily: vault.fontDisplay, fontWeight: 600, fontSize: 96,
+            fontFamily: vault.fontDisplay, fontWeight: 600,
+            fontSize: isMobile ? 48 : isTablet ? 64 : 96,
             lineHeight: 0.95, letterSpacing: "0.005em", margin: "24px 0 16px",
             color: vault.ink, position: "relative",
           }}>
@@ -373,13 +394,14 @@ function VaultHero() {
             </span>
             <span style={{
               position: "absolute", left: 0, bottom: -6, color: vault.arcane,
-              opacity: 0.18, filter: "blur(24px)", fontSize: 96,
+              opacity: 0.18, filter: "blur(24px)",
+              fontSize: isMobile ? 48 : isTablet ? 64 : 96,
               pointerEvents: "none", lineHeight: 0.95,
             }}>Open the<br />vault.</span>
           </h1>
           <p style={{
-            fontFamily: vault.fontBody, fontSize: 22, lineHeight: 1.5,
-            color: vault.inkSoft, margin: "8px 0 36px", maxWidth: 540,
+            fontFamily: vault.fontBody, fontSize: isMobile ? 16 : 22, lineHeight: 1.5,
+            color: vault.inkSoft, margin: "8px 0 28px", maxWidth: 540,
           }}>
             $MTG is a Pump.Fun memecoin bound to a vault of real, graded Magic: The
             Gathering cards held by <span style={{ color: vault.spellGlow }}>Collector Crypt</span>. Every two hours, a
@@ -387,14 +409,18 @@ function VaultHero() {
             <strong style={{ color: vault.spellGlow }}>1h+</strong>. <em style={{ color: vault.arcaneGlow }}>The cardboard remembers.</em>
           </p>
 
-          <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 32 }}>
-            <VManaPip kind="W" /><VManaPip kind="U" /><VManaPip kind="B" /><VManaPip kind="R" /><VManaPip kind="G" />
-            <span style={{ fontFamily: vault.fontMono, fontSize: 11, letterSpacing: "0.32em", color: vault.inkMuted, marginLeft: 14 }}>
+          <div style={{ display: "flex", gap: isMobile ? 6 : 8, alignItems: "center", marginBottom: isMobile ? 24 : 32, flexWrap: "wrap" }}>
+            <VManaPip kind="W" size={isMobile ? 18 : 22} />
+            <VManaPip kind="U" size={isMobile ? 18 : 22} />
+            <VManaPip kind="B" size={isMobile ? 18 : 22} />
+            <VManaPip kind="R" size={isMobile ? 18 : 22} />
+            <VManaPip kind="G" size={isMobile ? 18 : 22} />
+            <span style={{ fontFamily: vault.fontMono, fontSize: isMobile ? 9 : 11, letterSpacing: "0.32em", color: vault.inkMuted, marginLeft: isMobile ? 6 : 14 }}>
               FIVE COLORS · ONE COIN
             </span>
           </div>
 
-          <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: isMobile ? 8 : 12, alignItems: "center", flexWrap: "wrap" }}>
             <GlowButton href={PUMPFUN_URL}>◈ Summon on Pump.Fun</GlowButton>
             <GlowButton href={DEXSCREENER_URL} variant="ghost" style={{
               background: "transparent", color: vault.spark,
@@ -404,13 +430,13 @@ function VaultHero() {
             </GlowButton>
             <button onClick={() => copy(MTG_CA)} style={{
               display: "inline-flex", alignItems: "center", gap: 10,
-              padding: "16px 20px",
+              padding: isMobile ? "11px 14px" : "16px 20px",
               background: vault.panel, border: `1px dashed ${vault.arcane}66`, borderRadius: 4,
-              color: vault.inkSoft, fontFamily: vault.fontMono, fontSize: 12,
+              color: vault.inkSoft, fontFamily: vault.fontMono, fontSize: isMobile ? 10 : 12,
               letterSpacing: "0.18em", cursor: "pointer",
             }}>
               <span style={{ color: vault.spellGlow }}>CA</span>
-              <span>{truncCA(MTG_CA, 5, 5)}</span>
+              <span>{truncCA(MTG_CA, isMobile ? 4 : 5, isMobile ? 4 : 5)}</span>
               <span style={{ color: copied ? vault.arcaneGlow : vault.arcane }}>
                 {copied ? "✓" : "⎘"}
               </span>
@@ -418,49 +444,68 @@ function VaultHero() {
           </div>
 
           {/* Stats — live from DexScreener */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 0, marginTop: 56, border: `1px solid ${vault.panelEdge}`, borderRadius: 4 }}>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: isMobile ? "repeat(2,1fr)" : "repeat(4,1fr)",
+            gap: 0, marginTop: isMobile ? 36 : 56,
+            border: `1px solid ${vault.panelEdge}`, borderRadius: 4,
+          }}>
             {[
               { k: "MKT CAP",  v: mtg?.marketCapLabel  || "—", sub: mtg ? mtg.change24hLabel : (loading ? "loading" : "live") },
               { k: "PRICE",    v: mtg?.priceUsdLabel   || "—", sub: mtg?.dexId?.toUpperCase() || (error ? "offline" : "···") },
               { k: "VOL 24H",  v: mtg?.volume24hLabel  || "—", sub: mtg ? `${mtg.txns24h.toLocaleString()} txns` : "—" },
               { k: "DROP 001", v: "III",                       sub: "cards sealed" },
-            ].map((s, i) => (
-              <div key={i} style={{
-                padding: "18px 20px", background: vault.panel,
-                borderRight: i < 3 ? `1px solid ${vault.panelEdge}` : "none",
-              }}>
-                <div style={{ fontFamily: vault.fontMono, fontSize: 10, letterSpacing: "0.3em", color: vault.inkMuted }}>{s.k}</div>
-                <div style={{ fontFamily: vault.fontDisplay, fontWeight: 600, fontSize: 26, color: vault.ink, margin: "6px 0 2px" }}>{s.v}</div>
-                <div style={{
-                  fontFamily: vault.fontBody, fontStyle: "italic", fontSize: 14,
-                  color: i === 0 && mtg
-                    ? (mtg.change24hUp ? "#86efac" : vault.ember)
-                    : vault.arcaneGlow,
+            ].map((s, i) => {
+              const last = i === 3;
+              const colCount = isMobile ? 2 : 4;
+              const isRightCol = ((i + 1) % colCount) === 0;
+              const isBottomRow = i >= (4 - colCount);
+              return (
+                <div key={i} style={{
+                  padding: isMobile ? "12px 14px" : "18px 20px", background: vault.panel,
+                  borderRight: !isRightCol ? `1px solid ${vault.panelEdge}` : "none",
+                  borderBottom: isMobile && !isBottomRow ? `1px solid ${vault.panelEdge}` : "none",
+                  minWidth: 0,
                 }}>
-                  {s.sub}
+                  <div style={{ fontFamily: vault.fontMono, fontSize: isMobile ? 9 : 10, letterSpacing: "0.3em", color: vault.inkMuted }}>{s.k}</div>
+                  <div style={{
+                    fontFamily: vault.fontDisplay, fontWeight: 600,
+                    fontSize: isMobile ? 20 : 26, color: vault.ink, margin: "6px 0 2px",
+                    overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                  }}>{s.v}</div>
+                  <div style={{
+                    fontFamily: vault.fontBody, fontStyle: "italic", fontSize: isMobile ? 12 : 14,
+                    color: i === 0 && mtg
+                      ? (mtg.change24hUp ? "#86efac" : vault.ember)
+                      : vault.arcaneGlow,
+                    overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                  }}>
+                    {s.sub}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
         {/* Featured card — real */}
         <div style={{ position: "relative" }}>
-          <Sigil size={620} color={vault.spell} opacity={0.18}
-                 style={{ position: "absolute", inset: "-100px -60px auto auto", zIndex: 0 }} spin />
-          <div style={{ position: "relative", maxWidth: 420, margin: "0 auto", zIndex: 1 }}>
+          <Sigil size={isMobile ? 360 : 620} color={vault.spell} opacity={0.18}
+                 style={{ position: "absolute", inset: isMobile ? "-60px -40px auto auto" : "-100px -60px auto auto", zIndex: 0 }} spin />
+          <div style={{ position: "relative", maxWidth: isMobile ? 280 : 420, margin: "0 auto", zIndex: 1 }}>
             <RealCard card={DROP_001[0]} size="lg" rotate={2} glow />
           </div>
 
           {/* Floating badge */}
           <div style={{
-            position: "absolute", top: -20, left: -10, zIndex: 2,
+            position: "absolute", top: isMobile ? -14 : -20, left: isMobile ? 4 : -10, zIndex: 2,
             background: `linear-gradient(135deg, ${vault.ember}, #8b1e1e)`,
-            color: "#fff", fontFamily: vault.fontMono, fontSize: 11,
-            letterSpacing: "0.28em", padding: "10px 18px",
+            color: "#fff", fontFamily: vault.fontMono, fontSize: isMobile ? 9 : 11,
+            letterSpacing: "0.28em", padding: isMobile ? "6px 12px" : "10px 18px",
             textTransform: "uppercase", boxShadow: `0 0 24px ${vault.ember}88`,
             transform: "rotate(-6deg)", borderRadius: 4,
             border: `1px solid ${vault.spellGlow}88`,
+            whiteSpace: "nowrap",
           }}>
             ◆ Next draw · {t.h}:{t.m}:{t.s}
           </div>
@@ -512,13 +557,18 @@ function VaultTicker() {
 //  HOW
 // ─────────────────────────────────────────────────────────────────
 function VaultHow() {
+  const { isMobile, isTablet } = useViewport();
   return (
-    <section id="how" style={{ padding: "120px 80px 100px", position: "relative" }}>
+    <section id="how" style={{
+      padding: isMobile ? "60px 16px 50px" : isTablet ? "80px 40px 70px" : "120px 80px 100px",
+      position: "relative",
+    }}>
       <HexBg opacity={0.025} />
-      <div style={{ textAlign: "center", marginBottom: 64, position: "relative" }}>
+      <div style={{ textAlign: "center", marginBottom: isMobile ? 36 : 64, position: "relative" }}>
         <VaultEyebrow>RITE.001 · DISTRIBUTION_LOOP</VaultEyebrow>
         <h2 style={{
-          fontFamily: vault.fontDisplay, fontWeight: 600, fontSize: 64,
+          fontFamily: vault.fontDisplay, fontWeight: 600,
+          fontSize: isMobile ? 36 : isTablet ? 48 : 64,
           margin: "16px 0", color: vault.ink, letterSpacing: "0.01em",
         }}>
           The wheel <em style={{
@@ -527,28 +577,37 @@ function VaultHow() {
             fontFamily: vault.fontBody, fontWeight: 500,
           }}>turns</em>.
         </h2>
-        <p style={{ fontFamily: vault.fontBody, fontSize: 20, color: vault.inkSoft, maxWidth: 580, margin: "0 auto" }}>
+        <p style={{
+          fontFamily: vault.fontBody, fontSize: isMobile ? 16 : 20,
+          color: vault.inkSoft, maxWidth: 580, margin: "0 auto",
+        }}>
           Four moves. No keys, no presale, no whitelists. The chain decides.
         </p>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20, position: "relative" }}>
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: isMobile ? "1fr" : isTablet ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
+        gap: isMobile ? 14 : 20, position: "relative",
+      }}>
         {HOW_STEPS.map((step, i) => (
-          <VaultPanel key={i} padding={28} glow={i === 0}>
-            <div style={{ position: "relative", marginBottom: 16, height: 90 }}>
-              <Sigil size={90} color={vault.arcane} opacity={0.4} style={{ position: "absolute", top: -10, right: -10 }} />
+          <VaultPanel key={i} padding={isMobile ? 20 : 28} glow={i === 0}>
+            <div style={{ position: "relative", marginBottom: 16, height: isMobile ? 64 : 90 }}>
+              <Sigil size={isMobile ? 64 : 90} color={vault.arcane} opacity={0.4} style={{ position: "absolute", top: -10, right: -10 }} />
               <div style={{
                 position: "absolute", left: 0, top: 0,
-                fontFamily: vault.fontDisplay, fontWeight: 600, fontSize: 64,
+                fontFamily: vault.fontDisplay, fontWeight: 600,
+                fontSize: isMobile ? 44 : 64,
                 color: vault.spellGlow, lineHeight: 0.9, letterSpacing: "0.02em",
                 textShadow: `0 0 18px ${vault.spell}66`,
               }}>{step.n}</div>
             </div>
             <div style={{
-              fontFamily: vault.fontDisplay, fontWeight: 600, fontSize: 22,
+              fontFamily: vault.fontDisplay, fontWeight: 600,
+              fontSize: isMobile ? 18 : 22,
               color: vault.ink, letterSpacing: "0.04em", marginBottom: 8,
             }}>{step.title}</div>
             <div style={{ width: 40, height: 1, background: vault.arcane, marginBottom: 14 }} />
-            <p style={{ fontFamily: vault.fontBody, fontSize: 17, lineHeight: 1.5, color: vault.inkSoft, margin: 0 }}>
+            <p style={{ fontFamily: vault.fontBody, fontSize: isMobile ? 15 : 17, lineHeight: 1.5, color: vault.inkSoft, margin: 0 }}>
               {step.body}
             </p>
           </VaultPanel>
@@ -564,18 +623,24 @@ function VaultHow() {
 function VaultRaffle() {
   const t = useCountdown(nextRaffleTs);
   const prize = DROP_001[0];
+  const { isMobile, isTablet } = useViewport();
   return (
-    <section style={{ padding: "60px 80px 60px" }}>
-      <VaultPanel padding={56} glow style={{
+    <section style={{ padding: isMobile ? "30px 12px 30px" : isTablet ? "40px 40px 40px" : "60px 80px 60px" }}>
+      <VaultPanel padding={isMobile ? 20 : isTablet ? 36 : 56} glow style={{
         background: `radial-gradient(ellipse at 80% 50%, ${vault.arcaneDeep}66 0%, ${vault.panel} 50%, ${vault.bgDeep} 100%)`,
       }}>
-        <Sigil size={520} color={vault.spell} opacity={0.12} spin
-               style={{ position: "absolute", top: -40, right: -100 }} />
-        <div style={{ position: "relative", display: "grid", gridTemplateColumns: "1.3fr 1fr", gap: 64, alignItems: "center" }}>
+        <Sigil size={isMobile ? 320 : 520} color={vault.spell} opacity={0.12} spin
+               style={{ position: "absolute", top: -40, right: isMobile ? -80 : -100 }} />
+        <div style={{
+          position: "relative", display: "grid",
+          gridTemplateColumns: isMobile ? "1fr" : "1.3fr 1fr",
+          gap: isMobile ? 32 : 64, alignItems: "center",
+        }}>
           <div>
             <VaultEyebrow color={vault.spellGlow}>FORETELLING · NEXT DRAW</VaultEyebrow>
             <h2 style={{
-              fontFamily: vault.fontDisplay, fontWeight: 600, fontSize: 56,
+              fontFamily: vault.fontDisplay, fontWeight: 600,
+              fontSize: isMobile ? 32 : isTablet ? 42 : 56,
               color: vault.ink, margin: "16px 0 18px", letterSpacing: "0.01em",
             }}>
               The wheel rolls <em style={{
@@ -584,7 +649,7 @@ function VaultRaffle() {
                 fontFamily: vault.fontBody, fontWeight: 500,
               }}>every two hours</em>.
             </h2>
-            <p style={{ fontFamily: vault.fontBody, fontSize: 20, color: vault.inkSoft, lineHeight: 1.5, margin: "0 0 24px", maxWidth: 560 }}>
+            <p style={{ fontFamily: vault.fontBody, fontSize: isMobile ? 16 : 20, color: vault.inkSoft, lineHeight: 1.5, margin: "0 0 24px", maxWidth: 560 }}>
               Featured prize: <strong style={{ color: vault.spellGlow }}>{prize.year} {prize.name}</strong>{" — "}
               {prize.treatment}, graded <strong style={{ color: vault.spellGlow }}>{prize.grade}</strong>, from{" "}
               <em style={{ color: vault.arcaneGlow }}>{prize.set}</em>.
@@ -592,28 +657,29 @@ function VaultRaffle() {
 
             {/* Mechanics row */}
             <div style={{
-              display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12,
-              marginBottom: 28, maxWidth: 520,
+              display: "grid", gridTemplateColumns: "1fr 1fr", gap: isMobile ? 8 : 12,
+              marginBottom: isMobile ? 20 : 28, maxWidth: 520,
             }}>
               {[
                 { k: "MINIMUM BAG",  v: "1,000,000 $MTG", s: "to qualify" },
                 { k: "HOLD TIME",    v: "≥ 1 HOUR",       s: "before draw" },
               ].map((m) => (
                 <div key={m.k} style={{
-                  padding: "14px 16px",
+                  padding: isMobile ? "10px 12px" : "14px 16px",
                   background: `linear-gradient(180deg, ${vault.bgDeep}, ${vault.panel})`,
                   border: `1px solid ${vault.arcane}66`, borderRadius: 4,
+                  minWidth: 0,
                 }}>
                   <div style={{
-                    fontFamily: vault.fontMono, fontSize: 10, letterSpacing: "0.3em",
+                    fontFamily: vault.fontMono, fontSize: isMobile ? 9 : 10, letterSpacing: "0.3em",
                     color: vault.arcaneGlow,
                   }}>{m.k}</div>
                   <div style={{
-                    fontFamily: vault.fontDisplay, fontSize: 20, fontWeight: 700,
+                    fontFamily: vault.fontDisplay, fontSize: isMobile ? 15 : 20, fontWeight: 700,
                     color: vault.ink, marginTop: 4,
                   }}>{m.v}</div>
                   <div style={{
-                    fontFamily: vault.fontBody, fontStyle: "italic", fontSize: 13,
+                    fontFamily: vault.fontBody, fontStyle: "italic", fontSize: isMobile ? 12 : 13,
                     color: vault.inkSoft, marginTop: 2,
                   }}>{m.s}</div>
                 </div>
@@ -621,8 +687,8 @@ function VaultRaffle() {
             </div>
 
             <div style={{
-              display: "flex", gap: 8, fontFamily: vault.fontMono, fontSize: 11,
-              letterSpacing: "0.2em", color: vault.inkMuted, marginBottom: 28,
+              display: "flex", gap: 8, fontFamily: vault.fontMono, fontSize: isMobile ? 10 : 11,
+              letterSpacing: "0.2em", color: vault.inkMuted, marginBottom: isMobile ? 20 : 28,
               alignItems: "center", flexWrap: "wrap",
             }}>
               <span>PRIZE MINT</span>
@@ -633,20 +699,23 @@ function VaultRaffle() {
               </a>
             </div>
 
-            <div style={{ display: "flex", gap: 16 }}>
+            <div style={{ display: "flex", gap: isMobile ? 8 : 16 }}>
               {[{ k: "HOURS", v: t.h }, { k: "MIN", v: t.m }, { k: "SEC", v: t.s }].map((c) => (
                 <div key={c.k} style={{
                   background: `linear-gradient(180deg, ${vault.bgDeep}, ${vault.panel})`,
                   border: `1px solid ${vault.spell}66`,
-                  borderRadius: 4, padding: "20px 28px", minWidth: 110, textAlign: "center",
+                  borderRadius: 4,
+                  padding: isMobile ? "12px 0" : "20px 28px",
+                  minWidth: 0, flex: 1, textAlign: "center",
                   boxShadow: `inset 0 0 20px rgba(251,191,36,.08), 0 0 24px rgba(251,191,36,.18)`,
                 }}>
                   <div style={{
-                    fontFamily: vault.fontDisplay, fontWeight: 700, fontSize: 56,
+                    fontFamily: vault.fontDisplay, fontWeight: 700,
+                    fontSize: isMobile ? 32 : 56,
                     color: vault.spellGlow, lineHeight: 1, fontVariantNumeric: "tabular-nums",
                     textShadow: `0 0 16px ${vault.spell}88`,
                   }}>{c.v}</div>
-                  <div style={{ fontFamily: vault.fontMono, fontSize: 11, letterSpacing: "0.32em", color: vault.inkSoft, marginTop: 10 }}>
+                  <div style={{ fontFamily: vault.fontMono, fontSize: isMobile ? 9 : 11, letterSpacing: "0.32em", color: vault.inkSoft, marginTop: isMobile ? 6 : 10 }}>
                     {c.k}
                   </div>
                 </div>
@@ -655,7 +724,7 @@ function VaultRaffle() {
           </div>
 
           {/* Card */}
-          <div style={{ position: "relative", maxWidth: 360, margin: "0 auto" }}>
+          <div style={{ position: "relative", maxWidth: isMobile ? 260 : 360, margin: "0 auto" }}>
             <RealCard card={prize} size="md" rotate={3} glow />
           </div>
         </div>
@@ -687,6 +756,7 @@ function VaultCandle({ c, x, w, scale, baseY }) {
 //  WINNERS LEADERBOARD
 // ─────────────────────────────────────────────────────────────────
 function VaultWinners() {
+  const { isMobile, isTablet } = useViewport();
   // Rarity → palette
   const rarityStyle = (r) => {
     const k = (r || "").toLowerCase();
@@ -697,19 +767,21 @@ function VaultWinners() {
 
   return (
     <section id="winners" style={{
-      padding: "100px 80px 100px", position: "relative",
+      padding: isMobile ? "60px 16px 60px" : isTablet ? "80px 40px 80px" : "100px 80px 100px",
+      position: "relative",
       borderTop: `1px solid ${vault.panelEdge}`,
       background: `linear-gradient(180deg, ${vault.bg}, ${vault.bgDeep})`,
     }}>
       <HexBg opacity={0.035} />
-      <Sigil size={420} color={vault.spell} opacity={0.08} spin
+      <Sigil size={isMobile ? 240 : 420} color={vault.spell} opacity={0.08} spin
              style={{ position: "absolute", top: -80, left: -80 }} />
 
-      <div style={{ position: "relative", display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 48, gap: 32, flexWrap: "wrap" }}>
+      <div style={{ position: "relative", display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: isMobile ? 32 : 48, gap: isMobile ? 20 : 32, flexWrap: "wrap" }}>
         <div style={{ maxWidth: 620 }}>
           <VaultEyebrow color={vault.spellGlow}>HALL.OF.WINNERS</VaultEyebrow>
           <h2 style={{
-            fontFamily: vault.fontDisplay, fontWeight: 600, fontSize: 56,
+            fontFamily: vault.fontDisplay, fontWeight: 600,
+            fontSize: isMobile ? 32 : isTablet ? 42 : 56,
             margin: "16px 0 12px", color: vault.ink, letterSpacing: "0.01em",
           }}>
             Wallets <em style={{
@@ -718,7 +790,7 @@ function VaultWinners() {
               fontFamily: vault.fontBody, fontWeight: 500,
             }}>summoned</em>.
           </h2>
-          <p style={{ fontFamily: vault.fontBody, fontSize: 19, color: vault.inkSoft, margin: 0, lineHeight: 1.5 }}>
+          <p style={{ fontFamily: vault.fontBody, fontSize: isMobile ? 15 : 19, color: vault.inkSoft, margin: 0, lineHeight: 1.5 }}>
             Every wheel-turn names a new keeper. The vault remembers them here.
           </p>
         </div>
@@ -737,19 +809,19 @@ function VaultWinners() {
         {WINNERS.length === 0 ? (
           // ── Empty state: no draws yet ───────────────────────────────
           <div style={{
-            padding: "72px 32px",
+            padding: isMobile ? "48px 18px" : "72px 32px",
             display: "flex", flexDirection: "column", alignItems: "center",
             textAlign: "center", position: "relative",
           }}>
-            <Sigil size={160} color={vault.spell} opacity={0.55} spin />
+            <Sigil size={isMobile ? 110 : 160} color={vault.spell} opacity={0.55} spin />
             <div style={{
-              fontFamily: vault.fontDisplay, fontSize: 28, fontWeight: 600,
+              fontFamily: vault.fontDisplay, fontSize: isMobile ? 22 : 28, fontWeight: 600,
               color: vault.ink, margin: "24px 0 8px", letterSpacing: "0.01em",
             }}>
               The wheel awaits its first turn.
             </div>
             <div style={{
-              fontFamily: vault.fontBody, fontSize: 17, fontStyle: "italic",
+              fontFamily: vault.fontBody, fontSize: isMobile ? 15 : 17, fontStyle: "italic",
               color: vault.inkSoft, maxWidth: 480, lineHeight: 1.5,
             }}>
               Winners are summoned every two hours. The first keeper will be inscribed here.
@@ -772,24 +844,26 @@ function VaultWinners() {
           </div>
         ) : (
           <>
-            {/* Header row */}
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "80px 1.2fr 1.6fr 1fr 1fr 90px",
-              padding: "14px 24px",
-              background: vault.bgDeep,
-              borderBottom: `1px solid ${vault.panelEdge}`,
-              fontFamily: vault.fontMono, fontSize: 10, letterSpacing: "0.3em",
-              color: vault.inkMuted, textTransform: "uppercase",
-              alignItems: "center",
-            }}>
-              <span>№</span>
-              <span>Wallet</span>
-              <span>Card</span>
-              <span>Grade</span>
-              <span>When</span>
-              <span style={{ textAlign: "right" }}>Proof</span>
-            </div>
+            {/* Header row — hidden on mobile (stacked cards instead) */}
+            {!isMobile && (
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: "80px 1.2fr 1.6fr 1fr 1fr 90px",
+                padding: "14px 24px",
+                background: vault.bgDeep,
+                borderBottom: `1px solid ${vault.panelEdge}`,
+                fontFamily: vault.fontMono, fontSize: 10, letterSpacing: "0.3em",
+                color: vault.inkMuted, textTransform: "uppercase",
+                alignItems: "center",
+              }}>
+                <span>№</span>
+                <span>Wallet</span>
+                <span>Card</span>
+                <span>Grade</span>
+                <span>When</span>
+                <span style={{ textAlign: "right" }}>Proof</span>
+              </div>
+            )}
 
             {WINNERS.map((w, i) => {
               const isPending = !w.card || w.card === "—";
@@ -797,8 +871,12 @@ function VaultWinners() {
               return (
                 <div key={i} style={{
                   display: "grid",
-                  gridTemplateColumns: "80px 1.2fr 1.6fr 1fr 1fr 90px",
-                  padding: "18px 24px",
+                  gridTemplateColumns: isMobile
+                    ? "44px 1fr auto"
+                    : "80px 1.2fr 1.6fr 1fr 1fr 90px",
+                  gridAutoRows: isMobile ? "auto" : undefined,
+                  rowGap: isMobile ? 6 : 0,
+                  padding: isMobile ? "14px 16px" : "18px 24px",
                   borderBottom: i < WINNERS.length - 1 ? `1px solid ${vault.panelEdge}` : "none",
                   background: i === 0 && !isPending
                     ? `linear-gradient(90deg, ${vault.spell}11 0%, transparent 60%)`
@@ -882,6 +960,7 @@ function VaultWinners() {
 function VaultToken() {
   const [amt, setAmt] = React.useState("0.5");
   const { loading, error, mtg } = useDexScreener(MTG_CA);
+  const { isMobile, isTablet } = useViewport();
 
   const priceUsd = mtg?.priceUsd || 0;
   const usd = parseFloat(amt) || 0;
@@ -894,14 +973,16 @@ function VaultToken() {
 
   return (
     <section id="token" style={{
-      padding: "80px 80px 100px", position: "relative",
+      padding: isMobile ? "60px 16px 60px" : isTablet ? "70px 40px 80px" : "80px 80px 100px",
+      position: "relative",
       borderTop: `1px solid ${vault.panelEdge}`, borderBottom: `1px solid ${vault.panelEdge}`,
       background: `linear-gradient(180deg, ${vault.bgDeep}, ${vault.bg})`,
     }}>
-      <div style={{ textAlign: "center", marginBottom: 48 }}>
+      <div style={{ textAlign: "center", marginBottom: isMobile ? 32 : 48 }}>
         <VaultEyebrow>RITE.002 · COIN.LEDGER · LIVE</VaultEyebrow>
         <h2 style={{
-          fontFamily: vault.fontDisplay, fontWeight: 600, fontSize: 56,
+          fontFamily: vault.fontDisplay, fontWeight: 600,
+          fontSize: isMobile ? 32 : isTablet ? 42 : 56,
           margin: "16px 0", color: vault.ink, letterSpacing: "0.01em",
         }}>
           $MTG <em style={{
@@ -912,7 +993,11 @@ function VaultToken() {
         </h2>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1.55fr 1fr", gap: 24 }}>
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: isMobile ? "1fr" : "1.55fr 1fr",
+        gap: isMobile ? 16 : 24,
+      }}>
         <VaultPanel padding={0} style={{ overflow: "hidden" }}>
           {/* Header strip above chart */}
           <div style={{
@@ -935,12 +1020,12 @@ function VaultToken() {
                 {error ? "DEXSCREENER · UNREACHABLE" : loading ? "DEXSCREENER · LOADING…" : `LIVE · ${mtg?.dexId?.toUpperCase() || "PUMP.FUN"}`}
               </div>
               <div style={{ display: "flex", alignItems: "baseline", gap: 14, marginTop: 8, flexWrap: "wrap" }}>
-                <span style={{ fontFamily: vault.fontDisplay, fontWeight: 700, fontSize: 38, color: vault.ink }}>
+                <span style={{ fontFamily: vault.fontDisplay, fontWeight: 700, fontSize: isMobile ? 26 : 38, color: vault.ink }}>
                   {mtg?.priceUsdLabel || "—"}
                 </span>
                 {mtg && (
                   <span style={{
-                    fontFamily: vault.fontBody, fontStyle: "italic", fontSize: 18,
+                    fontFamily: vault.fontBody, fontStyle: "italic", fontSize: isMobile ? 14 : 18,
                     color: mtg.change24hUp ? "#86efac" : vault.ember,
                   }}>
                     {mtg.change24hUp ? "▲" : "▼"} {mtg.change24hLabel}
@@ -962,7 +1047,8 @@ function VaultToken() {
 
           {/* Live chart embed */}
           <div style={{
-            position: "relative", width: "100%", aspectRatio: "16/9",
+            position: "relative", width: "100%",
+            aspectRatio: isMobile ? "4/3" : "16/9",
             background: vault.bgDeep,
           }}>
             {embedUrl ? (
@@ -992,7 +1078,8 @@ function VaultToken() {
 
           {/* Stats footer */}
           <div style={{
-            display: "grid", gridTemplateColumns: "repeat(4, 1fr)",
+            display: "grid",
+            gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
             borderTop: `1px solid ${vault.panelEdge}`,
           }}>
             {[
@@ -1000,22 +1087,33 @@ function VaultToken() {
               ["LIQUIDITY", mtg?.liquidityLabel || "—"],
               ["VOL 24H",   mtg?.volume24hLabel || "—"],
               ["TXNS 24H",  mtg ? mtg.txns24h.toLocaleString() : "—"],
-            ].map(([k, v], i) => (
-              <div key={k} style={{
-                padding: "16px 20px",
-                borderRight: i < 3 ? `1px solid ${vault.panelEdge}` : "none",
-              }}>
-                <div style={{ fontFamily: vault.fontMono, fontSize: 10, letterSpacing: "0.28em", color: vault.inkMuted }}>{k}</div>
-                <div style={{ fontFamily: vault.fontDisplay, fontWeight: 600, fontSize: 22, color: vault.ink, marginTop: 4 }}>{v}</div>
-              </div>
-            ))}
+            ].map(([k, v], i) => {
+              const colCount = isMobile ? 2 : 4;
+              const isRightCol = ((i + 1) % colCount) === 0;
+              const isBottomRow = i >= (4 - colCount);
+              return (
+                <div key={k} style={{
+                  padding: isMobile ? "12px 14px" : "16px 20px",
+                  borderRight: !isRightCol ? `1px solid ${vault.panelEdge}` : "none",
+                  borderBottom: isMobile && !isBottomRow ? `1px solid ${vault.panelEdge}` : "none",
+                  minWidth: 0,
+                }}>
+                  <div style={{ fontFamily: vault.fontMono, fontSize: isMobile ? 9 : 10, letterSpacing: "0.28em", color: vault.inkMuted }}>{k}</div>
+                  <div style={{
+                    fontFamily: vault.fontDisplay, fontWeight: 600,
+                    fontSize: isMobile ? 17 : 22, color: vault.ink, marginTop: 4,
+                    overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                  }}>{v}</div>
+                </div>
+              );
+            })}
           </div>
         </VaultPanel>
 
-        <VaultPanel padding={28} glow>
+        <VaultPanel padding={isMobile ? 18 : 28} glow>
           <VaultEyebrow color={vault.spellGlow}>SUMMON.COIN</VaultEyebrow>
           <div style={{
-            fontFamily: vault.fontDisplay, fontWeight: 600, fontSize: 26,
+            fontFamily: vault.fontDisplay, fontWeight: 600, fontSize: isMobile ? 22 : 26,
             margin: "12px 0 20px", color: vault.ink,
           }}>
             Mint thy bag.
@@ -1031,9 +1129,12 @@ function VaultToken() {
               <input
                 value={amt}
                 onChange={(e) => setAmt(e.target.value.replace(/[^0-9.]/g, ""))}
+                inputMode="decimal"
                 style={{
-                  flex: 1, background: "transparent", border: "none", outline: "none",
-                  fontFamily: vault.fontDisplay, fontWeight: 600, fontSize: 30, color: vault.ink,
+                  flex: 1, minWidth: 0, width: "100%",
+                  background: "transparent", border: "none", outline: "none",
+                  fontFamily: vault.fontDisplay, fontWeight: 600,
+                  fontSize: isMobile ? 24 : 30, color: vault.ink,
                   fontVariantNumeric: "tabular-nums",
                 }}
               />
@@ -1058,9 +1159,12 @@ function VaultToken() {
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <div style={{
-                flex: 1, fontFamily: vault.fontDisplay, fontWeight: 600, fontSize: 30,
+                flex: 1, minWidth: 0,
+                fontFamily: vault.fontDisplay, fontWeight: 600,
+                fontSize: isMobile ? 22 : 30,
                 color: vault.spellGlow, fontVariantNumeric: "tabular-nums",
                 textShadow: `0 0 16px ${vault.spell}55`,
+                overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
               }}>
                 {tokens > 0
                   ? tokens.toLocaleString(undefined, { maximumFractionDigits: 0 })
@@ -1091,7 +1195,7 @@ function VaultToken() {
           }}>
             <div>
               <div style={{ fontFamily: vault.fontMono, fontSize: 10, letterSpacing: "0.3em", color: vault.arcaneGlow }}>RAFFLE ENTRIES</div>
-              <div style={{ fontFamily: vault.fontDisplay, fontSize: 24, fontWeight: 700, marginTop: 4 }}>
+              <div style={{ fontFamily: vault.fontDisplay, fontSize: isMobile ? 19 : 24, fontWeight: 700, marginTop: 4 }}>
                 {entries.toLocaleString()}{" "}
                 <span style={{ fontFamily: vault.fontBody, fontWeight: 400, fontSize: 14, fontStyle: "italic", color: vault.arcaneGlow }}>
                   tickets
@@ -1191,14 +1295,19 @@ function VaultDropCard({ card, idx }) {
 }
 
 function VaultGrid() {
+  const { isMobile, isTablet } = useViewport();
   return (
-    <section id="vault" style={{ padding: "120px 80px 100px", position: "relative" }}>
+    <section id="vault" style={{
+      padding: isMobile ? "60px 16px 60px" : isTablet ? "80px 40px 70px" : "120px 80px 100px",
+      position: "relative",
+    }}>
       <HexBg opacity={0.03} />
-      <div style={{ position: "relative", display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 56, gap: 32, flexWrap: "wrap" }}>
+      <div style={{ position: "relative", display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: isMobile ? 32 : 56, gap: isMobile ? 16 : 32, flexWrap: "wrap" }}>
         <div style={{ maxWidth: 620 }}>
           <VaultEyebrow>RITE.003 · DROP.001 · LIVE</VaultEyebrow>
           <h2 style={{
-            fontFamily: vault.fontDisplay, fontWeight: 600, fontSize: 56,
+            fontFamily: vault.fontDisplay, fontWeight: 600,
+            fontSize: isMobile ? 32 : isTablet ? 42 : 56,
             margin: "16px 0 12px", color: vault.ink, letterSpacing: "0.01em",
           }}>
             Three cards. <em style={{
@@ -1207,22 +1316,27 @@ function VaultGrid() {
               fontFamily: vault.fontBody, fontWeight: 500,
             }}>One wheel.</em>
           </h2>
-          <p style={{ fontFamily: vault.fontBody, fontSize: 19, color: vault.inkSoft, margin: 0, lineHeight: 1.5 }}>
+          <p style={{ fontFamily: vault.fontBody, fontSize: isMobile ? 15 : 19, color: vault.inkSoft, margin: 0, lineHeight: 1.5 }}>
             Sealed in custody by <span style={{ color: vault.spellGlow }}>Collector Crypt</span>, graded, and bound to the
             next three snapshots of $MTG. Click any card to inspect the on-chain asset.
           </p>
         </div>
         <div style={{
-          display: "flex", flexDirection: "column", gap: 6, alignItems: "flex-end",
-          fontFamily: vault.fontMono, fontSize: 11, letterSpacing: "0.22em",
-          color: vault.inkMuted, textAlign: "right",
+          display: "flex", flexDirection: "column", gap: 6,
+          alignItems: isMobile ? "flex-start" : "flex-end",
+          fontFamily: vault.fontMono, fontSize: isMobile ? 10 : 11, letterSpacing: "0.22em",
+          color: vault.inkMuted, textAlign: isMobile ? "left" : "right",
         }}>
           <div>CUSTODY: COLLECTOR CRYPT</div>
           <div>CHAIN: SOLANA</div>
           <div>STATUS: <span style={{ color: "#86efac" }}>● SEALED</span></div>
         </div>
       </div>
-      <div style={{ position: "relative", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 40, paddingTop: 18 }}>
+      <div style={{
+        position: "relative", display: "grid",
+        gridTemplateColumns: isMobile ? "1fr" : isTablet ? "repeat(2, 1fr)" : "repeat(3, 1fr)",
+        gap: isMobile ? 28 : 40, paddingTop: 18,
+      }}>
         {DROP_001.map((c, i) => <VaultDropCard key={c.id} card={c} idx={i} />)}
       </div>
     </section>
@@ -1234,15 +1348,18 @@ function VaultGrid() {
 // ─────────────────────────────────────────────────────────────────
 function VaultFaq() {
   const [open, setOpen] = React.useState(0);
+  const { isMobile, isTablet } = useViewport();
   return (
     <section id="faq" style={{
-      padding: "100px 80px 100px", position: "relative",
+      padding: isMobile ? "60px 16px 60px" : isTablet ? "80px 40px 80px" : "100px 80px 100px",
+      position: "relative",
       background: `linear-gradient(180deg, ${vault.bg} 0%, ${vault.bgDeep} 100%)`,
     }}>
-      <div style={{ textAlign: "center", marginBottom: 56 }}>
+      <div style={{ textAlign: "center", marginBottom: isMobile ? 32 : 56 }}>
         <VaultEyebrow>CODEX.APOCRYPHA</VaultEyebrow>
         <h2 style={{
-          fontFamily: vault.fontDisplay, fontWeight: 600, fontSize: 56,
+          fontFamily: vault.fontDisplay, fontWeight: 600,
+          fontSize: isMobile ? 32 : isTablet ? 42 : 56,
           margin: "16px 0", color: vault.ink, letterSpacing: "0.01em",
         }}>
           Questions <em style={{
@@ -1263,20 +1380,34 @@ function VaultFaq() {
             }}>
               <button onClick={() => setOpen(isOpen ? -1 : i)} style={{
                 width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center",
-                background: "transparent", border: "none", padding: "24px 14px", cursor: "pointer", textAlign: "left",
+                background: "transparent", border: "none",
+                padding: isMobile ? "18px 6px" : "24px 14px",
+                cursor: "pointer", textAlign: "left", gap: 12,
               }}>
-                <span style={{ fontFamily: vault.fontDisplay, fontSize: 22, fontWeight: 600, color: vault.ink }}>
-                  <span style={{ color: vault.arcane, marginRight: 14, fontFamily: vault.fontMono, fontSize: 14, fontWeight: 400 }}>
+                <span style={{
+                  fontFamily: vault.fontDisplay,
+                  fontSize: isMobile ? 16 : 22,
+                  fontWeight: 600, color: vault.ink,
+                  display: "flex", alignItems: "baseline", gap: isMobile ? 8 : 14, flexWrap: "wrap",
+                }}>
+                  <span style={{ color: vault.arcane, fontFamily: vault.fontMono, fontSize: isMobile ? 11 : 14, fontWeight: 400 }}>
                     {String(i + 1).padStart(2, "0")} /
                   </span>
-                  {item.q}
+                  <span>{item.q}</span>
                 </span>
-                <span style={{ color: vault.arcane, fontSize: 26, transition: "transform .25s", transform: isOpen ? "rotate(45deg)" : "rotate(0)" }}>＋</span>
+                <span style={{
+                  color: vault.arcane, fontSize: isMobile ? 22 : 26,
+                  transition: "transform .25s",
+                  transform: isOpen ? "rotate(45deg)" : "rotate(0)",
+                  flex: "0 0 auto",
+                }}>＋</span>
               </button>
               {isOpen && (
                 <div style={{
-                  padding: "0 14px 24px 60px",
-                  fontFamily: vault.fontBody, fontSize: 18, color: vault.inkSoft, lineHeight: 1.55,
+                  padding: isMobile ? "0 6px 18px 26px" : "0 14px 24px 60px",
+                  fontFamily: vault.fontBody,
+                  fontSize: isMobile ? 15 : 18,
+                  color: vault.inkSoft, lineHeight: 1.55,
                 }}>
                   {item.a}
                 </div>
@@ -1294,15 +1425,22 @@ function VaultFaq() {
 // ─────────────────────────────────────────────────────────────────
 function VaultFooter() {
   const [copied, copy] = useCopy();
+  const { isMobile, isTablet } = useViewport();
   return (
     <footer style={{
       background: vault.bgDeep, color: vault.ink,
-      padding: "70px 80px 40px", borderTop: `1px solid ${vault.panelEdge}`,
+      padding: isMobile ? "40px 16px 28px" : isTablet ? "56px 40px 32px" : "70px 80px 40px",
+      borderTop: `1px solid ${vault.panelEdge}`,
       position: "relative",
     }}>
       <HexBg opacity={0.04} />
-      <div style={{ position: "relative", display: "grid", gridTemplateColumns: "1.5fr 1fr 1fr 1fr", gap: 48, marginBottom: 48 }}>
-        <div>
+      <div style={{
+        position: "relative", display: "grid",
+        gridTemplateColumns: isMobile ? "1fr 1fr" : isTablet ? "1fr 1fr 1fr" : "1.5fr 1fr 1fr 1fr",
+        gap: isMobile ? 24 : 48,
+        marginBottom: isMobile ? 32 : 48,
+      }}>
+        <div style={{ gridColumn: isMobile ? "1 / -1" : isTablet ? "1 / -1" : "auto" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 18 }}>
             <div style={{
               position: "relative", width: 46, height: 46,
@@ -1324,7 +1462,7 @@ function VaultFooter() {
               </div>
             </div>
           </div>
-          <p style={{ fontFamily: vault.fontBody, fontSize: 17, lineHeight: 1.5, color: vault.inkSoft, maxWidth: 400 }}>
+          <p style={{ fontFamily: vault.fontBody, fontSize: isMobile ? 15 : 17, lineHeight: 1.5, color: vault.inkSoft, maxWidth: 400 }}>
             A community distribution rite for vaulted Magic: The Gathering cards, indexed to the bonding curve of $MTG on Pump.Fun.
           </p>
         </div>
@@ -1344,7 +1482,7 @@ function VaultFooter() {
                   "#";
                 return (
                   <a key={it} href={href} target={href === "#" ? undefined : "_blank"} rel="noopener noreferrer"
-                     style={{ color: vault.ink, textDecoration: "none", fontFamily: vault.fontBody, fontSize: 17 }}>
+                     style={{ color: vault.ink, textDecoration: "none", fontFamily: vault.fontBody, fontSize: isMobile ? 15 : 17 }}>
                     {it}
                   </a>
                 );
@@ -1356,33 +1494,50 @@ function VaultFooter() {
 
       <div style={{
         position: "relative",
-        border: `1px solid ${vault.arcane}66`, borderRadius: 4, padding: "16px 22px",
-        display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24,
+        border: `1px solid ${vault.arcane}66`, borderRadius: 4,
+        padding: isMobile ? "14px 16px" : "16px 22px",
+        display: "flex",
+        flexDirection: isMobile ? "column" : "row",
+        justifyContent: "space-between",
+        alignItems: isMobile ? "stretch" : "center",
+        gap: isMobile ? 12 : 16,
+        marginBottom: 24,
         background: `linear-gradient(180deg, ${vault.panel}, transparent)`,
         boxShadow: `inset 0 0 24px rgba(183,148,244,.06)`,
       }}>
-        <div>
+        <div style={{ minWidth: 0 }}>
           <div style={{ fontFamily: vault.fontMono, fontSize: 10, letterSpacing: "0.32em", color: vault.arcaneGlow }}>CONTRACT ADDRESS</div>
-          <div style={{ fontFamily: vault.fontMono, fontSize: 14, color: vault.ink, marginTop: 4, wordBreak: "break-all" }}>
+          <div style={{ fontFamily: vault.fontMono, fontSize: isMobile ? 12 : 14, color: vault.ink, marginTop: 4, wordBreak: "break-all" }}>
             {MTG_CA}
           </div>
         </div>
         <button onClick={() => copy(MTG_CA)} style={{
           background: `linear-gradient(135deg, ${vault.arcane}, ${vault.arcaneDeep})`,
           color: "#fff", border: `1px solid ${vault.arcaneGlow}`, borderRadius: 3,
-          padding: "10px 22px", fontFamily: vault.fontMono, fontSize: 12, letterSpacing: "0.28em",
+          padding: isMobile ? "10px 16px" : "10px 22px",
+          fontFamily: vault.fontMono, fontSize: 12, letterSpacing: "0.28em",
           cursor: "pointer", boxShadow: `0 0 16px ${vault.arcane}66`,
+          flex: "0 0 auto", alignSelf: isMobile ? "flex-end" : "auto",
         }}>
           {copied ? "✓ COPIED" : "COPY"}
         </button>
       </div>
 
-      <div style={{ position: "relative", display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: 20, borderTop: `1px solid ${vault.panelEdge}` }}>
-        <div style={{ fontFamily: vault.fontBody, fontStyle: "italic", fontSize: 14, color: vault.inkSoft }}>
+      <div style={{
+        position: "relative", display: "flex",
+        justifyContent: "space-between", alignItems: "center",
+        paddingTop: 20, borderTop: `1px solid ${vault.panelEdge}`,
+        gap: 16, flexWrap: "wrap",
+      }}>
+        <div style={{ fontFamily: vault.fontBody, fontStyle: "italic", fontSize: isMobile ? 12 : 14, color: vault.inkSoft, flex: "1 1 240px" }}>
           "All cards are real. All raffles are random. May your topdeck be lethal."
         </div>
         <div style={{ display: "flex", gap: 6 }}>
-          <VManaPip kind="W" size={20} /><VManaPip kind="U" size={20} /><VManaPip kind="B" size={20} /><VManaPip kind="R" size={20} /><VManaPip kind="G" size={20} />
+          <VManaPip kind="W" size={isMobile ? 16 : 20} />
+          <VManaPip kind="U" size={isMobile ? 16 : 20} />
+          <VManaPip kind="B" size={isMobile ? 16 : 20} />
+          <VManaPip kind="R" size={isMobile ? 16 : 20} />
+          <VManaPip kind="G" size={isMobile ? 16 : 20} />
         </div>
       </div>
     </footer>
