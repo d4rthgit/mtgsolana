@@ -362,6 +362,7 @@ const WINNERS = [
     set: "Urza's Destiny",
     year: 1999,
     when: "2026-05-26",
+    txUrl: "https://solscan.io/tx/3npWLPtSXpKGNFMQc4zq3pK3TpybEFYKdMnQFtUCEob9hGyBogcShe9DNC3P1pNGLLUD3W1PYVcSwUz7Nc2pD4b",
   },
   {
     wallet: "qKpZbAeu97Ba4sgpRqEehXD7dSwxWW59pNQkWSxsySJ",
