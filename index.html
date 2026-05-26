@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MTG Distri — A Pump.Fun Memecoin Bound to the Collector Crypt Vault</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=IM+Fell+English+SC&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #04020a;
+      font-family: "Cormorant Garamond", Georgia, serif;
+      color: #e8dcff;
+      min-height: 100vh;
+    }
+    #root { width: 100%; min-height: 100vh; }
+    * { box-sizing: border-box; }
+    ::selection { background: rgba(183, 148, 244, .35); color: #fff; }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 12px; height: 12px; }
+    ::-webkit-scrollbar-track { background: #04020a; }
+    ::-webkit-scrollbar-thumb { background: #231640; border-radius: 6px; }
+    ::-webkit-scrollbar-thumb:hover { background: #6d28d9; }
+  </style>
+
+  <script
+    src="https://unpkg.com/react@18.3.1/umd/react.development.js"
+    integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L"
+    crossorigin="anonymous"></script>
+  <script
+    src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"
+    integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm"
+    crossorigin="anonymous"></script>
+  <script
+    src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"
+    integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y"
+    crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" src="shared.jsx"></script>
+  <script type="text/babel" src="direction-vault.jsx"></script>
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+
+  <script type="text/babel">
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "featured": 2
+    }/*EDITMODE-END*/;
+
+    function App() {
+      const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+
+      // Reorder DROP_001 so the picked card is index 0 (which the hero + raffle use)
+      React.useEffect(() => {
+        if (!window.__DROP_001_ORIG) window.__DROP_001_ORIG = [...window.DROP_001];
+        const orig = window.__DROP_001_ORIG;
+        const idx = Math.max(0, Math.min(orig.length - 1, t.featured));
+        const reordered = [orig[idx], ...orig.filter((_, i) => i !== idx)];
+        window.DROP_001.length = 0;
+        window.DROP_001.push(...reordered);
+      }, [t.featured]);
+
+      return (
+        <>
+          <DirectionVault key={`drop-${t.featured}`} />
+
+          <TweaksPanel title="Tweaks">
+            <TweakSection label="Hero & Raffle" />
+            <TweakSelect
+              label="Featured prize"
+              value={t.featured}
+              options={[
+                { value: 0, label: "Mindslaver (CGC 10)" },
+                { value: 1, label: "Elvish Piper (PSA 7)" },
+                { value: 2, label: "Sheltered Valley (CGC 8.5)" },
+              ]}
+              onChange={(v) => setTweak("featured", Number(v))}
+            />
+            <TweakSection label="Notes" />
+            <div style={{
+              fontSize: 11, color: "rgba(41,38,27,.6)", lineHeight: 1.5,
+              padding: "4px 0",
+            }}>
+              Featured card swaps which of the three Drop 001 cards is shown in the hero and next-raffle spotlight. Card images load live from Collector Crypt.
+            </div>
+          </TweaksPanel>
+        </>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+  </script>
+</body>
+</html>
