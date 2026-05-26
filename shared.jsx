@@ -73,6 +73,28 @@ const DROP_001 = [
     flavor: "\"Even peace has its price.\"",
     valueLabel: "CGC 8.5 · Alliances",
   },
+  {
+    id: "gauntlet-of-might",
+    name: "Gauntlet of Might",
+    set: "Collectors' Edition",
+    year: 1993,
+    number: "—",
+    treatment: "Non-foil",
+    type: "Artifact",
+    rarity: "Rare",
+    grade: "CGC 8 NM-MT",
+    mana: "4",
+    color: "art",
+    accent: "#fde68a",
+    accentDeep: "#7a5d18",
+    image: "https://collectorcrypt-prod.s3.us-west-2.amazonaws.com/cards/34351ab7-f323-442c-a64e-936565d6479b",
+    mint: "28j7CwBNKro4AoyMxg7QCnRG4PMd3Lq1bbez6yJmxiER",
+    cost: "{4}",
+    rules: "Red creatures get +1/+1. Whenever a Mountain is tapped for mana, its controller adds {R} to their mana pool (in addition to any other mana that land produces).",
+    flavor: "\"Some relics outlive the world that forged them.\"",
+    valueLabel: "Vintage · 1993 · CE",
+    ultra: true,
+  },
 ];
 
 const FAQ_ITEMS = [

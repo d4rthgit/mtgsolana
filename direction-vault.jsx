@@ -454,7 +454,7 @@ function VaultHero() {
               { k: "MKT CAP",  v: mtg?.marketCapLabel  || "—", sub: mtg ? mtg.change24hLabel : (loading ? "loading" : "live") },
               { k: "PRICE",    v: mtg?.priceUsdLabel   || "—", sub: mtg?.dexId?.toUpperCase() || (error ? "offline" : "···") },
               { k: "VOL 24H",  v: mtg?.volume24hLabel  || "—", sub: mtg ? `${mtg.txns24h.toLocaleString()} txns` : "—" },
-              { k: "DROP 001", v: "III",                       sub: "cards sealed" },
+              { k: "DROP 001", v: "IV",                        sub: "incl. ultra" },
             ].map((s, i) => {
               const last = i === 3;
               const colCount = isMobile ? 2 : 4;
@@ -523,7 +523,8 @@ function VaultTicker() {
     ["MINDSLAVER · CGC 10 · SEALED", vault.spellGlow],
     ["ELVISH PIPER · PSA 7 FOIL", vault.arcaneGlow],
     ["SHELTERED VALLEY · CGC 8.5", vault.spark],
-    ["DROP 001 · III CARDS LIVE", vault.spellGlow],
+    ["◆◆ ULTRA-RAFFLE · GAUNTLET OF MIGHT · CE 1993 ◆◆", vault.spell],
+    ["DROP 001 · IV CARDS LIVE", vault.spellGlow],
     ["NO TAX · NO TEAM · NO MERCY", vault.ember],
   ];
   return (
@@ -1366,8 +1367,150 @@ function VaultDropCard({ card, idx }) {
   );
 }
 
+function UltraRaffleSpotlight({ card }) {
+  const { isMobile, isTablet } = useViewport();
+  return (
+    <div style={{
+      position: "relative",
+      marginBottom: isMobile ? 36 : 56,
+      padding: isMobile ? 18 : isTablet ? 32 : 48,
+      background: `
+        radial-gradient(ellipse at 85% 15%, ${vault.spell}33 0%, transparent 60%),
+        radial-gradient(ellipse at 15% 85%, ${vault.arcaneDeep}66 0%, transparent 55%),
+        linear-gradient(135deg, ${vault.panel}, ${vault.bgDeep})
+      `,
+      border: `1px solid ${vault.spell}66`,
+      borderRadius: 6,
+      boxShadow: `
+        inset 0 0 0 1px ${vault.spellGlow}22,
+        inset 0 0 80px rgba(251,191,36,.08),
+        0 0 40px rgba(251,191,36,.18)
+      `,
+      overflow: "hidden",
+    }}>
+      <Sigil size={isMobile ? 360 : 560} color={vault.spell} opacity={0.18} spin
+             style={{ position: "absolute", top: -120, right: -160, pointerEvents: "none" }} />
+      <Sigil size={isMobile ? 220 : 320} color={vault.spell} opacity={0.1}
+             style={{ position: "absolute", bottom: -100, left: -80, pointerEvents: "none" }} />
+      {["tl", "tr", "bl", "br"].map((p) => (
+        <div key={p} style={{
+          position: "absolute", width: 16, height: 16,
+          borderColor: vault.spellGlow, borderStyle: "solid",
+          ...(p === "tl" ? { top: -1, left: -1, borderWidth: "2px 0 0 2px" } :
+              p === "tr" ? { top: -1, right: -1, borderWidth: "2px 2px 0 0" } :
+              p === "bl" ? { bottom: -1, left: -1, borderWidth: "0 0 2px 2px" } :
+                            { bottom: -1, right: -1, borderWidth: "0 2px 2px 0" }),
+        }} />
+      ))}
+      {/* Floating ULTRA-RAFFLE ribbon */}
+      <div style={{
+        position: "absolute",
+        top: isMobile ? 14 : 22, left: isMobile ? 14 : 22, zIndex: 3,
+        display: "inline-flex", alignItems: "center", gap: 8,
+        padding: isMobile ? "6px 12px" : "8px 18px",
+        background: `linear-gradient(135deg, ${vault.spell}, ${vault.ember})`,
+        color: vault.bgDeep,
+        fontFamily: vault.fontMono, fontSize: isMobile ? 10 : 12,
+        fontWeight: 700, letterSpacing: "0.32em", textTransform: "uppercase",
+        borderRadius: 3,
+        border: `1px solid ${vault.spellGlow}`,
+        boxShadow: `0 0 24px ${vault.spell}88, inset 0 1px 0 rgba(255,255,255,.4)`,
+      }}>
+        ◈ Ultra-Raffle · Raffle IV
+      </div>
+
+      <div style={{
+        position: "relative", zIndex: 1,
+        display: "grid",
+        gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+        gap: isMobile ? 28 : 48,
+        alignItems: "center",
+        marginTop: isMobile ? 44 : 56,
+      }}>
+        <div>
+          <VaultEyebrow color={vault.spellGlow}>RAFFLE.IV · VINTAGE.UNBROKEN</VaultEyebrow>
+          <h3 style={{
+            fontFamily: vault.fontDisplay, fontWeight: 600,
+            fontSize: isMobile ? 30 : isTablet ? 38 : 46,
+            margin: "14px 0 14px", color: vault.ink, letterSpacing: "0.01em",
+            lineHeight: 1.05,
+          }}>
+            The fourth draw <em style={{
+              background: `linear-gradient(135deg, ${vault.spellGlow}, ${vault.spell})`,
+              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+              fontFamily: vault.fontBody, fontWeight: 500,
+            }}>shatters the wheel.</em>
+          </h3>
+          <p style={{
+            fontFamily: vault.fontBody, fontSize: isMobile ? 16 : 19,
+            color: vault.inkSoft, lineHeight: 1.5, margin: "0 0 22px", maxWidth: 520,
+          }}>
+            <strong style={{ color: vault.spellGlow }}>{card.year} {card.name}</strong> — {card.set},
+            graded <strong style={{ color: vault.spellGlow }}>{card.grade}</strong>. Held by Collector Crypt.
+            Bound to the <em style={{ color: vault.spell }}>fourth cycle</em> of $MTG — the rarest draw on the wheel.
+          </p>
+
+          <div style={{
+            display: "grid", gridTemplateColumns: "1fr 1fr", gap: isMobile ? 8 : 12,
+            marginBottom: isMobile ? 20 : 28, maxWidth: 520,
+          }}>
+            {[
+              { k: "ERA",     v: "VINTAGE",        s: "1993 · CE" },
+              { k: "GRADE",   v: card.grade,       s: "encapsulated" },
+            ].map((m) => (
+              <div key={m.k} style={{
+                padding: isMobile ? "10px 12px" : "14px 16px",
+                background: `linear-gradient(180deg, ${vault.bgDeep}, ${vault.panel})`,
+                border: `1px solid ${vault.spell}66`, borderRadius: 4,
+                minWidth: 0,
+              }}>
+                <div style={{
+                  fontFamily: vault.fontMono, fontSize: isMobile ? 9 : 10, letterSpacing: "0.3em",
+                  color: vault.spellGlow,
+                }}>{m.k}</div>
+                <div style={{
+                  fontFamily: vault.fontDisplay, fontSize: isMobile ? 15 : 19, fontWeight: 700,
+                  color: vault.ink, marginTop: 4,
+                  overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                }}>{m.v}</div>
+                <div style={{
+                  fontFamily: vault.fontBody, fontStyle: "italic", fontSize: isMobile ? 12 : 13,
+                  color: vault.inkSoft, marginTop: 2,
+                }}>{m.s}</div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{
+            display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap",
+            fontFamily: vault.fontMono, fontSize: isMobile ? 10 : 11,
+            letterSpacing: "0.2em", color: vault.inkMuted,
+          }}>
+            <span>PRIZE MINT</span>
+            <a href={`${COLLECTOR_CRYPT_BASE}${card.mint}`} target="_blank" rel="noopener noreferrer" style={{
+              color: vault.spellGlow, textDecoration: "none",
+              borderBottom: `1px dotted ${vault.spellGlow}66`,
+            }}>
+              {truncCA(card.mint, 5, 5)} ⤴
+            </a>
+          </div>
+        </div>
+
+        <div style={{ position: "relative", maxWidth: isMobile ? 300 : 380, margin: "0 auto", width: "100%" }}>
+          <a href={`${COLLECTOR_CRYPT_BASE}${card.mint}`} target="_blank" rel="noopener noreferrer"
+             style={{ textDecoration: "none", display: "block" }}>
+            <RealCard card={card} size="lg" rotate={-3} glow />
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function VaultGrid() {
   const { isMobile, isTablet } = useViewport();
+  const ultraCards = DROP_001.filter((c) => c.ultra);
+  const standardCards = DROP_001.filter((c) => !c.ultra);
   return (
     <section id="vault" style={{
       padding: isMobile ? "60px 16px 60px" : isTablet ? "80px 40px 70px" : "120px 80px 100px",
@@ -1382,15 +1525,15 @@ function VaultGrid() {
             fontSize: isMobile ? 32 : isTablet ? 42 : 56,
             margin: "16px 0 12px", color: vault.ink, letterSpacing: "0.01em",
           }}>
-            Three cards. <em style={{
+            Four cards. <em style={{
               background: `linear-gradient(135deg, ${vault.arcaneGlow}, ${vault.spell})`,
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
               fontFamily: vault.fontBody, fontWeight: 500,
             }}>One wheel.</em>
           </h2>
           <p style={{ fontFamily: vault.fontBody, fontSize: isMobile ? 15 : 19, color: vault.inkSoft, margin: 0, lineHeight: 1.5 }}>
-            Sealed in custody by <span style={{ color: vault.spellGlow }}>Collector Crypt</span>, graded, and bound to the
-            next three snapshots of $MTG. Click any card to inspect the on-chain asset.
+            Sealed in custody by <span style={{ color: vault.spellGlow }}>Collector Crypt</span>, graded, and bound to
+            four cycles of $MTG — three standard draws and one <span style={{ color: vault.spellGlow }}>Ultra-Raffle</span>. Click any card to inspect the on-chain asset.
           </p>
         </div>
         <div style={{
@@ -1404,12 +1547,15 @@ function VaultGrid() {
           <div>STATUS: <span style={{ color: "#86efac" }}>● SEALED</span></div>
         </div>
       </div>
+
+      {ultraCards.map((c) => <UltraRaffleSpotlight key={c.id} card={c} />)}
+
       <div style={{
         position: "relative", display: "grid",
         gridTemplateColumns: isMobile ? "1fr" : isTablet ? "repeat(2, 1fr)" : "repeat(3, 1fr)",
         gap: isMobile ? 28 : 40, paddingTop: 18,
       }}>
-        {DROP_001.map((c, i) => <VaultDropCard key={c.id} card={c} idx={i} />)}
+        {standardCards.map((c, i) => <VaultDropCard key={c.id} card={c} idx={i} />)}
       </div>
     </section>
   );
