@@ -404,7 +404,7 @@ function VaultHero() {
             color: vault.inkSoft, margin: "8px 0 28px", maxWidth: 540,
           }}>
             $MTG is a Pump.Fun memecoin bound to a vault of real, graded Magic: The
-            Gathering cards held by <span style={{ color: vault.spellGlow }}>Collector Crypt</span>. Every two hours, a
+            Gathering cards held by <span style={{ color: vault.spellGlow }}>Collector Crypt</span>. Every hour, a
             winner is drawn from holders with <strong style={{ color: vault.spellGlow }}>1M+ $MTG</strong> held for{" "}
             <strong style={{ color: vault.spellGlow }}>1h+</strong>. <em style={{ color: vault.arcaneGlow }}>The cardboard remembers.</em>
           </p>
@@ -647,7 +647,7 @@ function VaultRaffle() {
                 background: `linear-gradient(135deg, ${vault.spellGlow}, ${vault.spell})`,
                 WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
                 fontFamily: vault.fontBody, fontWeight: 500,
-              }}>every two hours</em>.
+              }}>every hour</em>.
             </h2>
             <p style={{ fontFamily: vault.fontBody, fontSize: isMobile ? 16 : 20, color: vault.inkSoft, lineHeight: 1.5, margin: "0 0 24px", maxWidth: 560 }}>
               Featured prize: <strong style={{ color: vault.spellGlow }}>{prize.year} {prize.name}</strong>{" — "}
@@ -799,7 +799,7 @@ function VaultWinners() {
           fontFamily: vault.fontMono, fontSize: 11, letterSpacing: "0.22em",
           color: vault.inkMuted, textAlign: "right",
         }}>
-          <div>CADENCE: 2H</div>
+          <div>CADENCE: 1H</div>
           <div>DRAWS TO DATE: {String(WINNERS.filter(w => w.card && w.card !== "—").length).padStart(3, "0")}</div>
           <div>STATUS: <span style={{ color: "#86efac" }}>{WINNERS.length === 0 ? "● PENDING" : "● ROLLING"}</span></div>
         </div>
@@ -824,7 +824,7 @@ function VaultWinners() {
               fontFamily: vault.fontBody, fontSize: isMobile ? 15 : 17, fontStyle: "italic",
               color: vault.inkSoft, maxWidth: 480, lineHeight: 1.5,
             }}>
-              Winners are summoned every two hours. The first keeper will be inscribed here.
+              Winners are summoned every hour. The first keeper will be inscribed here.
             </div>
             <div style={{
               marginTop: 28, display: "inline-flex", alignItems: "center", gap: 10,

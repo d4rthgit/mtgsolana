@@ -78,7 +78,7 @@ const DROP_001 = [
 const FAQ_ITEMS = [
   {
     q: "What is $MTG?",
-    a: "A Pump.Fun token whose holders are summoned to a raffle every two hours for real, vaulted Magic: The Gathering cards held in custody by Collector Crypt. One token does not summon. One million does."
+    a: "A Pump.Fun token whose holders are summoned to a raffle every hour for real, vaulted Magic: The Gathering cards held in custody by Collector Crypt. One token does not summon. One million does."
   },
   {
     q: "How do I qualify?",
@@ -86,11 +86,11 @@ const FAQ_ITEMS = [
   },
   {
     q: "How often is a card drawn?",
-    a: "Every two hours, on the dot. The countdown on this page is the clock the team uses. Winners are announced when the wheel stops."
+    a: "Every hour, on the dot. The countdown on this page is the clock the team uses. Winners are announced when the wheel stops."
   },
   {
     q: "How are winners chosen?",
-    a: "A winner is drawn every two hours from the pool of qualified wallets — those holding 1,000,000+ $MTG for at least one hour before the draw. The result is broadcast across the coven."
+    a: "A winner is drawn every hour from the pool of qualified wallets — those holding 1,000,000+ $MTG for at least one hour before the draw. The result is broadcast across the coven."
   },
   {
     q: "Are the cards real?",
@@ -98,7 +98,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "What if I lose?",
-    a: "Your $MTG is not consumed by raffles — it does not burn, fade, or vanish. Hold through the next snapshot and re-enter. The wheel rolls every two hours."
+    a: "Your $MTG is not consumed by raffles — it does not burn, fade, or vanish. Hold through the next snapshot and re-enter. The wheel rolls every hour."
   },
   {
     q: "Why Pump.Fun?",
@@ -139,7 +139,7 @@ const HOW_STEPS = [
   {
     n: "III",
     title: "The Drawing",
-    body: "Every two hours a card is unsealed from the Collector Crypt vault and a winner is summoned from the qualified wallets."
+    body: "Every hour a card is unsealed from the Collector Crypt vault and a winner is summoned from the qualified wallets."
   },
   {
     n: "IV",
@@ -220,9 +220,9 @@ function useCountdown(targetTs) {
   return { d: pad(d), h: pad(h), m: pad(m), s: pad(s), msRemaining: ms };
 }
 
-// Next raffle: rolls every 2 hours, epoch-aligned so all viewers see the
+// Next raffle: rolls every hour, epoch-aligned so all viewers see the
 // same countdown.
-const RAFFLE_INTERVAL_MS = 2 * 60 * 60 * 1000;
+const RAFFLE_INTERVAL_MS = 60 * 60 * 1000;
 function nextRaffleTs() {
   return Math.ceil(Date.now() / RAFFLE_INTERVAL_MS) * RAFFLE_INTERVAL_MS;
 }
