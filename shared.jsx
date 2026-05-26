@@ -251,6 +251,10 @@ function nextRaffleTs() {
 }
 const NEXT_RAFFLE_TS = nextRaffleTs(); // legacy export — kept for shape compat
 
+// Grand Prize / Ultra-Raffle absolute target — the final draw of Drop 001.
+// Bound to a fixed UTC instant so every viewer sees the same countdown.
+const ULTRA_RAFFLE_TS = new Date("2026-05-26T18:02:00Z").getTime();
+
 // Copy CA helper with tiny toast state.
 function useCopy() {
   const [copied, setCopied] = React.useState(false);
@@ -400,6 +404,7 @@ Object.assign(window, {
   CANDLES,
   NEXT_RAFFLE_TS,
   RAFFLE_INTERVAL_MS,
+  ULTRA_RAFFLE_TS,
   nextRaffleTs,
   useCountdown,
   useCopy,

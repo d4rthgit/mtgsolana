@@ -311,7 +311,7 @@ function VaultEyebrow({ children, color = vault.arcane }) {
 function VaultHero() {
   const [copied, copy] = useCopy();
   const { mtg, loading, error } = useDexScreener(MTG_CA);
-  const t = useCountdown(nextRaffleTs);
+  const t = useCountdown(ULTRA_RAFFLE_TS);
   const { isMobile, isTablet } = useViewport();
   return (
     <section style={{
@@ -496,18 +496,19 @@ function VaultHero() {
             <RealCard card={DROP_001[0]} size="lg" rotate={2} glow />
           </div>
 
-          {/* Floating badge */}
+          {/* Floating badge — Grand Prize countdown */}
           <div style={{
             position: "absolute", top: isMobile ? -14 : -20, left: isMobile ? 4 : -10, zIndex: 2,
-            background: `linear-gradient(135deg, ${vault.ember}, #8b1e1e)`,
-            color: "#fff", fontFamily: vault.fontMono, fontSize: isMobile ? 9 : 11,
+            background: `linear-gradient(135deg, ${vault.spellGlow}, ${vault.spell})`,
+            color: vault.bgDeep, fontFamily: vault.fontMono, fontSize: isMobile ? 9 : 11,
             letterSpacing: "0.28em", padding: isMobile ? "6px 12px" : "10px 18px",
-            textTransform: "uppercase", boxShadow: `0 0 24px ${vault.ember}88`,
+            textTransform: "uppercase",
+            boxShadow: `0 0 28px ${vault.spell}aa, inset 0 1px 0 rgba(255,255,255,.45)`,
             transform: "rotate(-6deg)", borderRadius: 4,
-            border: `1px solid ${vault.spellGlow}88`,
-            whiteSpace: "nowrap",
+            border: `1px solid ${vault.spellGlow}`,
+            whiteSpace: "nowrap", fontWeight: 700,
           }}>
-            ◆ Next draw · {t.h}:{t.m}:{t.s}
+            ◆ Grand Prize · {t.h}:{t.m}:{t.s}
           </div>
         </div>
       </div>
@@ -622,8 +623,9 @@ function VaultHow() {
 //  NEXT RAFFLE
 // ─────────────────────────────────────────────────────────────────
 function VaultRaffle() {
-  const t = useCountdown(nextRaffleTs);
   const prize = DROP_001[0];
+  const isGrand = !!prize?.ultra;
+  const t = useCountdown(isGrand ? ULTRA_RAFFLE_TS : nextRaffleTs);
   const { isMobile, isTablet } = useViewport();
   return (
     <section style={{ padding: isMobile ? "30px 12px 30px" : isTablet ? "40px 40px 40px" : "60px 80px 60px" }}>
@@ -638,22 +640,38 @@ function VaultRaffle() {
           gap: isMobile ? 32 : 64, alignItems: "center",
         }}>
           <div>
-            <VaultEyebrow color={vault.spellGlow}>FORETELLING · NEXT DRAW</VaultEyebrow>
+            <VaultEyebrow color={vault.spellGlow}>
+              {isGrand ? "FORETELLING · GRAND PRIZE" : "FORETELLING · NEXT DRAW"}
+            </VaultEyebrow>
             <h2 style={{
               fontFamily: vault.fontDisplay, fontWeight: 600,
               fontSize: isMobile ? 32 : isTablet ? 42 : 56,
               color: vault.ink, margin: "16px 0 18px", letterSpacing: "0.01em",
             }}>
-              The wheel rolls <em style={{
-                background: `linear-gradient(135deg, ${vault.spellGlow}, ${vault.spell})`,
-                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-                fontFamily: vault.fontBody, fontWeight: 500,
-              }}>every hour</em>.
+              {isGrand ? (
+                <>The wheel readies its <em style={{
+                  background: `linear-gradient(135deg, ${vault.spellGlow}, ${vault.spell})`,
+                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                  fontFamily: vault.fontBody, fontWeight: 500,
+                }}>final turn</em>.</>
+              ) : (
+                <>The wheel rolls <em style={{
+                  background: `linear-gradient(135deg, ${vault.spellGlow}, ${vault.spell})`,
+                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                  fontFamily: vault.fontBody, fontWeight: 500,
+                }}>every hour</em>.</>
+              )}
             </h2>
             <p style={{ fontFamily: vault.fontBody, fontSize: isMobile ? 16 : 20, color: vault.inkSoft, lineHeight: 1.5, margin: "0 0 24px", maxWidth: 560 }}>
-              Featured prize: <strong style={{ color: vault.spellGlow }}>{prize.year} {prize.name}</strong>{" — "}
-              {prize.treatment}, graded <strong style={{ color: vault.spellGlow }}>{prize.grade}</strong>, from{" "}
-              <em style={{ color: vault.arcaneGlow }}>{prize.set}</em>.
+              {isGrand ? (
+                <>Grand Prize: <strong style={{ color: vault.spellGlow }}>{prize.year} {prize.name}</strong>{" — "}
+                {prize.set}, graded <strong style={{ color: vault.spellGlow }}>{prize.grade}</strong>,
+                worth <strong style={{ color: vault.spellGlow }}>≈ {prize.valueSol} SOL</strong>. The fourth and final draw of Drop 001.</>
+              ) : (
+                <>Featured prize: <strong style={{ color: vault.spellGlow }}>{prize.year} {prize.name}</strong>{" — "}
+                {prize.treatment}, graded <strong style={{ color: vault.spellGlow }}>{prize.grade}</strong>, from{" "}
+                <em style={{ color: vault.arcaneGlow }}>{prize.set}</em>.</>
+              )}
             </p>
 
             {/* Mechanics row */}
@@ -1369,6 +1387,7 @@ function VaultDropCard({ card, idx }) {
 
 function UltraRaffleSpotlight({ card }) {
   const { isMobile, isTablet } = useViewport();
+  const t = useCountdown(ULTRA_RAFFLE_TS);
   return (
     <div style={{
       position: "relative",
@@ -1491,6 +1510,34 @@ function UltraRaffleSpotlight({ card }) {
             }}>
               vintage,<br/>encapsulated,<br/>irreplaceable
             </div>
+          </div>
+
+          {/* Countdown to the Grand Prize */}
+          <div style={{
+            display: "flex", gap: isMobile ? 8 : 12,
+            marginBottom: isMobile ? 18 : 24, maxWidth: 520,
+          }}>
+            {[{ k: "HRS", v: t.h }, { k: "MIN", v: t.m }, { k: "SEC", v: t.s }].map((c) => (
+              <div key={c.k} style={{
+                background: `linear-gradient(180deg, ${vault.bgDeep}, ${vault.panel})`,
+                border: `1px solid ${vault.spell}88`,
+                borderRadius: 4,
+                padding: isMobile ? "10px 0" : "14px 0",
+                minWidth: 0, flex: 1, textAlign: "center",
+                boxShadow: `inset 0 0 18px rgba(251,191,36,.12), 0 0 22px rgba(251,191,36,.22)`,
+              }}>
+                <div style={{
+                  fontFamily: vault.fontDisplay, fontWeight: 700,
+                  fontSize: isMobile ? 28 : 40,
+                  color: vault.spellGlow, lineHeight: 1, fontVariantNumeric: "tabular-nums",
+                  textShadow: `0 0 16px ${vault.spell}aa`,
+                }}>{c.v}</div>
+                <div style={{
+                  fontFamily: vault.fontMono, fontSize: isMobile ? 8 : 10,
+                  letterSpacing: "0.32em", color: vault.spellGlow, marginTop: 6,
+                }}>{c.k}</div>
+              </div>
+            ))}
           </div>
 
           <div style={{
