@@ -6,95 +6,72 @@ const PUMPFUN_URL = `https://pump.fun/coin/${MTG_CA}`;
 const DEXSCREENER_URL = `https://dexscreener.com/solana/${MTG_PAIR}`;
 const COLLECTOR_CRYPT_BASE = "https://collectorcrypt.com/assets/solana/";
 
-// Drop 001 — three real, vaulted cards from Collector Crypt.
-// Sourced 2026-05 via og:image meta tags.
+// Drop 002 — three real, vaulted cards from Collector Crypt.
+// Sourced 2026-05 via og:image meta tags. Sylvan Library is the next draw.
 const DROP_001 = [
   {
-    id: "mindslaver",
-    name: "Mindslaver",
-    set: "Breaking News",
-    year: 2024,
-    number: "#80",
-    treatment: "Textured Foil",
-    type: "Legendary Artifact",
-    rarity: "Mythic",
-    grade: "CGC 10",
-    mana: "BB",
-    color: "art",
-    accent: "#c8a553",
-    accentDeep: "#7a5d18",
-    image: "https://d1xpxki1g4htqu.cloudfront.net/5agpCjFEs0cXQSQYPXCDf-xlubBcHk8Z1K09pjAlhUU",
-    mint: "95DAtnwXDsX7LMiLYGJYMUTbWsqJoNHys7tghqdEpDBK",
-    cost: "{4}",
-    rules: "{4}, {T}, Sacrifice Mindslaver: You control target player during that player's next turn.",
-    flavor: "\"Their will is yours, for one fleeting eternity.\"",
-    valueLabel: "Mythic · Textured Foil",
-    featured: true,
-  },
-  {
-    id: "elvish-piper",
-    name: "Elvish Piper",
-    set: "Urza's Destiny",
-    year: 1999,
-    number: "#104",
-    treatment: "Foil",
-    type: "Creature — Elf",
+    id: "sylvan-library",
+    name: "Sylvan Library",
+    set: "Legends",
+    year: 1994,
+    number: "—",
+    treatment: "Non-foil",
+    type: "Enchantment",
     rarity: "Rare",
-    grade: "PSA 7",
+    grade: "CGC 8.5 NM-MT+",
     mana: "1G",
     color: "G",
     accent: "#86efac",
     accentDeep: "#3b8d50",
-    image: "https://d1xpxki1g4htqu.cloudfront.net/LStHggzGHqLCq5x8Ng4fINRSXcNqle2aHYaIxbaRiEI",
-    mint: "8hwnNi8V9kdc3R2XoUNQ7aosteAGuTjgSwJPh9c57maK",
+    image: "https://collectorcrypt-prod.s3.us-west-2.amazonaws.com/cards/17c65e1e-4a22-4d90-a706-264ec4ddf730",
+    mint: "EKX33mx9eGPg1wfBQ6Ddj9VBb9UPAndELA1gsumQyRQM",
     cost: "{1}{G}",
-    rules: "{G}, {T}: Put a creature card from your hand onto the battlefield.",
-    flavor: "\"The right notes call the right beasts.\"",
-    valueLabel: "Foil · 1999",
+    rules: "At the beginning of your draw step, you may draw two additional cards. If you do, choose two cards in your hand drawn this turn. For each of those cards, pay 4 life or put the card on top of your library.",
+    flavor: "\"Knowledge is a price gladly paid.\"",
+    valueLabel: "Legends · 1994",
+    featured: true,
   },
   {
-    id: "sheltered-valley",
-    name: "Sheltered Valley",
-    set: "Alliances",
-    year: 1996,
-    number: "—",
-    treatment: "Non-foil",
-    type: "Land",
-    rarity: "Rare",
-    grade: "CGC 8.5",
-    mana: "",
-    color: "art",
-    accent: "#7dd3fc",
-    accentDeep: "#0a3b5e",
-    image: "https://d1xpxki1g4htqu.cloudfront.net/aFQHhbFoZRnVg5ImTeM8G80VCZnTxZHx1vidC8nDoRc",
-    mint: "9845etDTZiwBUXMUNbMoFdrM912vXbbEp6KDQbqBPiLf",
-    cost: "",
-    rules: "Sheltered Valley enters tapped. {T}: Add {C}. At the beginning of your upkeep, if you control three or more lands named Sheltered Valley, you lose the game.",
-    flavor: "\"Even peace has its price.\"",
-    valueLabel: "CGC 8.5 · Alliances",
-  },
-  {
-    id: "gauntlet-of-might",
-    name: "Gauntlet of Might",
-    set: "Collectors' Edition",
+    id: "helm-of-chatzuk",
+    name: "Helm of Chatzuk",
+    set: "Limited Edition (Alpha)",
     year: 1993,
     number: "—",
     treatment: "Non-foil",
     type: "Artifact",
     rarity: "Rare",
-    grade: "CGC 8 NM-MT",
-    mana: "4",
+    grade: "CGC 7",
+    mana: "3",
     color: "art",
     accent: "#fde68a",
     accentDeep: "#7a5d18",
-    image: "https://collectorcrypt-prod.s3.us-west-2.amazonaws.com/cards/34351ab7-f323-442c-a64e-936565d6479b",
-    mint: "28j7CwBNKro4AoyMxg7QCnRG4PMd3Lq1bbez6yJmxiER",
-    cost: "{4}",
-    rules: "Red creatures get +1/+1. Whenever a Mountain is tapped for mana, its controller adds {R} to their mana pool (in addition to any other mana that land produces).",
-    flavor: "\"Some relics outlive the world that forged them.\"",
-    valueLabel: "Vintage · 1993 · CE",
-    valueSol: 2,
-    ultra: true,
+    image: "https://d1xpxki1g4htqu.cloudfront.net/1PGmKc2DgUTAUh1yeJONPHes2-ntKXvk0Yewut34z38",
+    mint: "FHjTG2cH3WYVYqs83Cft8Z7qxSfscGg8knH6RUYFaW5i",
+    cost: "{3}",
+    rules: "{3}, {T}: Target creature you control gains banding until end of turn.",
+    flavor: "\"Worn by those who would lead, and lead together.\"",
+    valueLabel: "Alpha · 1993",
+  },
+  {
+    id: "gray-ogre",
+    name: "Gray Ogre",
+    set: "Revised Edition",
+    year: 1994,
+    number: "—",
+    treatment: "Non-foil",
+    type: "Creature — Ogre",
+    rarity: "Common",
+    grade: "CGC 9",
+    mana: "2R",
+    color: "R",
+    accent: "#f97373",
+    accentDeep: "#8b2828",
+    image: "https://d1xpxki1g4htqu.cloudfront.net/ThOp48Ye2Pyc9Y3Disd7MyR9smmwEuim2-EY-b0cbp0",
+    mint: "H7qvM7DBcigs7VuH7GQs8qxzYsxuygStUCp79hHxt7SS",
+    cost: "{2}{R}",
+    rules: "Creature — Ogre · 2/2",
+    flavor: "\"The Gray Ogres have a fierce reputation, perhaps because of the natural sneer their faces bear.\"",
+    valueLabel: "Revised · 1994",
   },
 ];
 
@@ -251,9 +228,13 @@ function nextRaffleTs() {
 }
 const NEXT_RAFFLE_TS = nextRaffleTs(); // legacy export — kept for shape compat
 
-// Grand Prize / Ultra-Raffle absolute target — the final draw of Drop 001.
-// Bound to a fixed UTC instant so every viewer sees the same countdown.
+// Grand Prize / Ultra-Raffle absolute target — used when an ultra-flagged card
+// is featured. Kept as a constant so historical drops can be referenced.
 const ULTRA_RAFFLE_TS = new Date("2026-05-26T18:02:00Z").getTime();
+
+// Next standard raffle — absolute UTC instant for the upcoming draw.
+// Currently pinned to the Sylvan Library draw (1 hour from Drop 002 launch).
+const NEXT_DRAW_TS = new Date("2026-05-27T03:05:00Z").getTime();
 
 // Copy CA helper with tiny toast state.
 function useCopy() {
@@ -405,6 +386,7 @@ Object.assign(window, {
   NEXT_RAFFLE_TS,
   RAFFLE_INTERVAL_MS,
   ULTRA_RAFFLE_TS,
+  NEXT_DRAW_TS,
   nextRaffleTs,
   useCountdown,
   useCopy,

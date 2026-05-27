@@ -311,7 +311,7 @@ function VaultEyebrow({ children, color = vault.arcane }) {
 function VaultHero() {
   const [copied, copy] = useCopy();
   const { mtg, loading, error } = useDexScreener(MTG_CA);
-  const t = useCountdown(ULTRA_RAFFLE_TS);
+  const t = useCountdown(NEXT_DRAW_TS);
   const { isMobile, isTablet } = useViewport();
   return (
     <section style={{
@@ -454,7 +454,7 @@ function VaultHero() {
               { k: "MKT CAP",  v: mtg?.marketCapLabel  || "—", sub: mtg ? mtg.change24hLabel : (loading ? "loading" : "live") },
               { k: "PRICE",    v: mtg?.priceUsdLabel   || "—", sub: mtg?.dexId?.toUpperCase() || (error ? "offline" : "···") },
               { k: "VOL 24H",  v: mtg?.volume24hLabel  || "—", sub: mtg ? `${mtg.txns24h.toLocaleString()} txns` : "—" },
-              { k: "DROP 001", v: "IV",                        sub: "incl. ultra" },
+              { k: "DROP 002", v: "III",                       sub: "cards sealed" },
             ].map((s, i) => {
               const last = i === 3;
               const colCount = isMobile ? 2 : 4;
@@ -496,19 +496,18 @@ function VaultHero() {
             <RealCard card={DROP_001[0]} size="lg" rotate={2} glow />
           </div>
 
-          {/* Floating badge — Grand Prize countdown */}
+          {/* Floating badge — Next draw countdown */}
           <div style={{
             position: "absolute", top: isMobile ? -14 : -20, left: isMobile ? 4 : -10, zIndex: 2,
-            background: `linear-gradient(135deg, ${vault.spellGlow}, ${vault.spell})`,
-            color: vault.bgDeep, fontFamily: vault.fontMono, fontSize: isMobile ? 9 : 11,
+            background: `linear-gradient(135deg, ${vault.ember}, #8b1e1e)`,
+            color: "#fff", fontFamily: vault.fontMono, fontSize: isMobile ? 9 : 11,
             letterSpacing: "0.28em", padding: isMobile ? "6px 12px" : "10px 18px",
-            textTransform: "uppercase",
-            boxShadow: `0 0 28px ${vault.spell}aa, inset 0 1px 0 rgba(255,255,255,.45)`,
+            textTransform: "uppercase", boxShadow: `0 0 24px ${vault.ember}88`,
             transform: "rotate(-6deg)", borderRadius: 4,
-            border: `1px solid ${vault.spellGlow}`,
-            whiteSpace: "nowrap", fontWeight: 700,
+            border: `1px solid ${vault.spellGlow}88`,
+            whiteSpace: "nowrap",
           }}>
-            ◆ Grand Prize · {t.h}:{t.m}:{t.s}
+            ◆ Next draw · {t.h}:{t.m}:{t.s}
           </div>
         </div>
       </div>
@@ -521,11 +520,10 @@ function VaultHero() {
 // ─────────────────────────────────────────────────────────────────
 function VaultTicker() {
   const items = [
-    ["MINDSLAVER · CGC 10 · SEALED", vault.spellGlow],
-    ["ELVISH PIPER · PSA 7 FOIL", vault.arcaneGlow],
-    ["SHELTERED VALLEY · CGC 8.5", vault.spark],
-    ["◆◆ ULTRA-RAFFLE · GAUNTLET OF MIGHT · ≈ 2 SOL ◆◆", vault.spell],
-    ["DROP 001 · IV CARDS LIVE", vault.spellGlow],
+    ["SYLVAN LIBRARY · CGC 8.5 · LEGENDS", "#86efac"],
+    ["HELM OF CHATZUK · CGC 7 · ALPHA", vault.spellGlow],
+    ["GRAY OGRE · CGC 9 · REVISED", vault.ember],
+    ["DROP 002 · III CARDS LIVE", vault.spellGlow],
     ["NO TAX · NO TEAM · NO MERCY", vault.ember],
   ];
   return (
@@ -625,7 +623,7 @@ function VaultHow() {
 function VaultRaffle() {
   const prize = DROP_001[0];
   const isGrand = !!prize?.ultra;
-  const t = useCountdown(isGrand ? ULTRA_RAFFLE_TS : nextRaffleTs);
+  const t = useCountdown(isGrand ? ULTRA_RAFFLE_TS : NEXT_DRAW_TS);
   const { isMobile, isTablet } = useViewport();
   return (
     <section style={{ padding: isMobile ? "30px 12px 30px" : isTablet ? "40px 40px 40px" : "60px 80px 60px" }}>
@@ -1329,7 +1327,7 @@ function VaultDropCard({ card, idx }) {
         color: "#fff", fontFamily: vault.fontMono, fontSize: 11,
         fontWeight: 700, letterSpacing: "0.28em",
       }}>
-        DROP 001 · {String(idx + 1).padStart(2, "0")}
+        DROP 002 · {String(idx + 1).padStart(2, "0")}
       </div>
 
       {/* Card */}
@@ -1631,21 +1629,21 @@ function VaultGrid() {
       <HexBg opacity={0.03} />
       <div style={{ position: "relative", display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: isMobile ? 32 : 56, gap: isMobile ? 16 : 32, flexWrap: "wrap" }}>
         <div style={{ maxWidth: 620 }}>
-          <VaultEyebrow>RITE.003 · DROP.001 · LIVE</VaultEyebrow>
+          <VaultEyebrow>RITE.003 · DROP.002 · LIVE</VaultEyebrow>
           <h2 style={{
             fontFamily: vault.fontDisplay, fontWeight: 600,
             fontSize: isMobile ? 32 : isTablet ? 42 : 56,
             margin: "16px 0 12px", color: vault.ink, letterSpacing: "0.01em",
           }}>
-            Four cards. <em style={{
+            Three cards. <em style={{
               background: `linear-gradient(135deg, ${vault.arcaneGlow}, ${vault.spell})`,
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
               fontFamily: vault.fontBody, fontWeight: 500,
             }}>One wheel.</em>
           </h2>
           <p style={{ fontFamily: vault.fontBody, fontSize: isMobile ? 15 : 19, color: vault.inkSoft, margin: 0, lineHeight: 1.5 }}>
-            Sealed in custody by <span style={{ color: vault.spellGlow }}>Collector Crypt</span>, graded, and bound to
-            four cycles of $MTG — three standard draws and one <span style={{ color: vault.spellGlow }}>Ultra-Raffle</span>. Click any card to inspect the on-chain asset.
+            Drop 002 — sealed in custody by <span style={{ color: vault.spellGlow }}>Collector Crypt</span>, graded, and bound to
+            the next three cycles of $MTG. <span style={{ color: vault.spellGlow }}>Sylvan Library</span> draws first. Click any card to inspect the on-chain asset.
           </p>
         </div>
         <div style={{
