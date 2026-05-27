@@ -348,6 +348,18 @@ function useDexScreener(tokenAddress) {
 // Leave the array empty to display the "awaiting first draw" empty state.
 const WINNERS = [
   {
+    wallet: "Bk8Z4zRSnkczgNUhLL9haCJfJX9kW3Zi3WgWzFECd1Dw",
+    card: "Gauntlet of Might",
+    rarity: "Rare",
+    grade: "CGC 8 NM-MT",
+    set: "Collectors' Edition",
+    year: 1993,
+    when: "2026-05-27",
+    txUrl: "https://solscan.io/tx/Kvr9dPC9EMMxfur8f8Q6DJSYpqoA64EcKneV3Rq5Cn8hynSdZR5KyuPpbFjVkwWVEsBagB17FavyLHHmkP37xb2",
+    ultra: true,
+    valueSol: 2,
+  },
+  {
     wallet: "3w8N7ay9pvNaXxYUu7gFeZQ2zHg6FECSgwGWxcWwb8C8",
     card: "Mindslaver",
     rarity: "Mythic",

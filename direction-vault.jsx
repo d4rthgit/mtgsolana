@@ -946,10 +946,25 @@ function VaultWinners() {
                     <div />
                     <div style={{ gridColumn: "2 / 4" }}>
                       <div style={{
+                        display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap",
                         fontFamily: vault.fontDisplay, fontSize: 16, fontWeight: 600,
                         color: isPending ? vault.inkMuted : vault.ink, letterSpacing: "0.01em",
                       }}>
-                        {isPending ? "Awaiting draw" : w.card}
+                        <span>{isPending ? "Awaiting draw" : w.card}</span>
+                        {w.ultra && (
+                          <span style={{
+                            fontFamily: vault.fontMono, fontSize: 9, fontWeight: 700,
+                            letterSpacing: "0.28em", textTransform: "uppercase",
+                            background: `linear-gradient(135deg, ${vault.spellGlow}, ${vault.spell})`,
+                            color: vault.bgDeep,
+                            padding: "3px 7px", borderRadius: 3,
+                            border: `1px solid ${vault.spellGlow}`,
+                            boxShadow: `0 0 12px ${vault.spell}88`,
+                            whiteSpace: "nowrap",
+                          }}>
+                            ◆ Grand{w.valueSol ? ` · ${w.valueSol} SOL` : ""}
+                          </span>
+                        )}
                       </div>
                       {!isPending && (
                         <div style={{
@@ -1009,10 +1024,25 @@ function VaultWinners() {
                   </div>
                   <div>
                     <div style={{
+                      display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap",
                       fontFamily: vault.fontDisplay, fontSize: 17, fontWeight: 600,
                       color: isPending ? vault.inkMuted : vault.ink, letterSpacing: "0.01em",
                     }}>
-                      {isPending ? "Awaiting draw" : w.card}
+                      <span>{isPending ? "Awaiting draw" : w.card}</span>
+                      {w.ultra && (
+                        <span style={{
+                          fontFamily: vault.fontMono, fontSize: 10, fontWeight: 700,
+                          letterSpacing: "0.3em", textTransform: "uppercase",
+                          background: `linear-gradient(135deg, ${vault.spellGlow}, ${vault.spell})`,
+                          color: vault.bgDeep,
+                          padding: "4px 9px", borderRadius: 3,
+                          border: `1px solid ${vault.spellGlow}`,
+                          boxShadow: `0 0 14px ${vault.spell}88`,
+                          whiteSpace: "nowrap",
+                        }}>
+                          ◆ Grand Prize{w.valueSol ? ` · ${w.valueSol} SOL` : ""}
+                        </span>
+                      )}
                     </div>
                     {!isPending && (
                       <div style={{
