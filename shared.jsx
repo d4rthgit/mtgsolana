@@ -236,8 +236,8 @@ const NEXT_RAFFLE_TS = nextRaffleTs(); // legacy export — kept for shape compa
 const ULTRA_RAFFLE_TS = new Date("2026-05-26T18:02:00Z").getTime();
 
 // Next standard raffle — absolute UTC instant for the upcoming draw.
-// Currently pinned to the Sylvan Library draw (1 hour from Drop 002 launch).
-const NEXT_DRAW_TS = new Date("2026-05-27T03:05:00Z").getTime();
+// Currently pinned to the Gray Ogre draw (3h30m after Sylvan Library was claimed).
+const NEXT_DRAW_TS = new Date("2026-05-27T10:13:00Z").getTime();
 
 // Copy CA helper with tiny toast state.
 function useCopy() {
@@ -347,6 +347,16 @@ function useDexScreener(tokenAddress) {
 // Winners leaderboard — most recent first. Add entries here as draws roll.
 // Leave the array empty to display the "awaiting first draw" empty state.
 const WINNERS = [
+  {
+    wallet: "DWGcnajeXtUrscyQ3BbFg9K35zhc9vgWKDDEPparjS9T",
+    card: "Sylvan Library",
+    rarity: "Rare",
+    grade: "CGC 8.5 NM-MT+",
+    set: "Legends",
+    year: 1994,
+    when: "2026-05-27",
+    txUrl: "https://solscan.io/tx/3oFBw1a8w8AGthegwxGQcWAuVY1wwQf7pXKoXikwgkmxtGqPZTDdGSFYH1eCL51Kc6tkUp5EbqfNeGMYDSm1gpA",
+  },
   {
     wallet: "Bk8Z4zRSnkczgNUhLL9haCJfJX9kW3Zi3WgWzFECd1Dw",
     card: "Gauntlet of Might",
