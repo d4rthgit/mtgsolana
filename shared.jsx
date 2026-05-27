@@ -1,7 +1,10 @@
 // Shared data + tiny utilities for both MTG Distri directions.
 
 const MTG_CA = "yNoMVX7EiTuWa9wUn7EEGWwvuUVXxW5WwCwPwKxpump";
-const MTG_PAIR = "8eEoHCHpd5phQ7z2TLpuLhuqfUefxzwT4wrnSAf3i7AH";
+// Most-liquid pair (currently the PumpSwap pool after the bonding-curve graduation).
+// useDexScreener auto-rediscovers the deepest pair on every poll, so this only
+// drives the static "Open on DexScreener" external link.
+const MTG_PAIR = "7tGMz4Sr8iAe8wgwHhMUiWfMWwTmAFGLDevfRysXQoFC";
 const PUMPFUN_URL = `https://pump.fun/coin/${MTG_CA}`;
 const DEXSCREENER_URL = `https://dexscreener.com/solana/${MTG_PAIR}`;
 const COLLECTOR_CRYPT_BASE = "https://collectorcrypt.com/assets/solana/";
@@ -269,20 +272,25 @@ function useDexScreener(tokenAddress) {
     async function load() {
       try {
         let pair = null;
-        if (typeof MTG_PAIR === "string" && MTG_PAIR) {
+        // Primary: discover the most-liquid live pair from the tokens endpoint.
+        // This auto-follows the token if it graduates between AMMs (Pump.Fun →
+        // PumpSwap → Meteora, etc.) without code changes.
+        try {
+          const res = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${tokenAddress}`);
+          if (res.ok) {
+            const data = await res.json();
+            const pairs = (data.pairs || []).filter(p => p.chainId === "solana");
+            pairs.sort((a, b) => (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0));
+            pair = pairs[0];
+          }
+        } catch (_) { /* fall through to pinned pair */ }
+        // Fallback: the pinned MTG_PAIR (used if the tokens endpoint is unreachable).
+        if (!pair && typeof MTG_PAIR === "string" && MTG_PAIR) {
           const res = await fetch(`https://api.dexscreener.com/latest/dex/pairs/solana/${MTG_PAIR}`);
           if (res.ok) {
             const data = await res.json();
             pair = data.pair || (data.pairs && data.pairs[0]);
           }
-        }
-        if (!pair) {
-          const res = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${tokenAddress}`);
-          if (!res.ok) throw new Error(`HTTP ${res.status}`);
-          const data = await res.json();
-          const pairs = (data.pairs || []).filter(p => p.chainId === "solana");
-          pairs.sort((a, b) => (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0));
-          pair = pairs[0];
         }
         if (!pair) throw new Error("No pair found");
         if (!cancelled) setState({ loading: false, error: null, pair });
